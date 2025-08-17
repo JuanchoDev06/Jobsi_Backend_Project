@@ -19,7 +19,9 @@ public class GestionUsuariosUseCase {
         if (usuario == null) {
             throw new IllegalArgumentException("El usuario no puede ser nulo");
         }
-        usuarioRepository.findByDocumento(usuario.documento());
+        if(usuarioRepository.findByDocumento(usuario.documento()).isPresent()) {
+            throw new IllegalArgumentException("Ya existe un usuario con el documento proporcionado");
+        }
 
         if (usuarioRepository.findByCorreo(usuario.correo()).isPresent()) {
             throw new IllegalArgumentException("Ya existe un usuario con el correo proporcionado");

@@ -1,4 +1,4 @@
-package com.escaes.jobsy.infraestructure.rest;
+package com.escaes.jobsy.infraestructure.rest.controller;
 
 
 import com.escaes.jobsy.application.dto.UsuarioRequest;
@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -27,7 +29,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/crear")
-    public ResponseEntity<Usuario> crearUsuario(@RequestBody UsuarioRequest request) {
+    public ResponseEntity<Map<String, Object>>crearUsuario(@RequestBody UsuarioRequest request) {
 
         Usuario usuario = new Usuario(
                 UUID.randomUUID(),
@@ -43,7 +45,11 @@ public class UsuarioController {
         );
         gestionUsuariosUseCase.crearUsuario(usuario);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Usuario creado exitosamente");
+        response.put("data", usuario);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{documento}")
