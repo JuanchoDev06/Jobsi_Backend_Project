@@ -5,6 +5,7 @@ import lombok.*;
 
 
 import java.util.Date;
+import java.util.UUID;
 
 
 @Entity
@@ -17,7 +18,7 @@ public class UsuarioEntity {
 
     @Id
     @Column(name="Usuario_UUID",columnDefinition = "CHAR(36)")
-    private String id;
+    private UUID id;
 
     @Column(name="Nombre", nullable = false)
     private String nombre;
@@ -40,5 +41,9 @@ public class UsuarioEntity {
     @ManyToOne
     @JoinColumn(name="Genero_UUID", nullable = false)
     private GeneroEntity genero;
+
+    @ManyToOne
+    @JoinColumn(name="Rol_UUID", nullable = false)
+    private RolEntity rol;
 
 }

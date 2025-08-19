@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface GeneroRepository {
 
-    void save(String genero);
+    void save(Genero genero);
     Optional<Genero> findById(Long id);
     Optional<Genero> findByNombre(String nombre);
     List<Genero>findAll();

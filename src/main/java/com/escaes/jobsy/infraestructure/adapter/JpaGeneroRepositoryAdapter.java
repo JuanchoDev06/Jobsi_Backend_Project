@@ -21,10 +21,10 @@ public class JpaGeneroRepositoryAdapter implements GeneroRepository {
 
 
     @Override
-    public void save(String genero) {
+    public void save(Genero genero) {
 
         GeneroEntity generoEntity= new GeneroEntity();
-        generoEntity.setNombreGenero(genero);
+        generoEntity.setNombreGenero(genero.nombreGenero());
         springDataGeneroRepository.save(generoEntity);
 
     }
@@ -41,6 +41,11 @@ public class JpaGeneroRepositoryAdapter implements GeneroRepository {
 
     @Override
     public Optional<Genero> findByNombre(String nombre) {
+        Optional<GeneroEntity>generoEntityOptional= springDataGeneroRepository.findByNombreGenero(nombre);
+        if(generoEntityOptional.isPresent()){
+            GeneroEntity generoEntity = generoEntityOptional.get();
+            return Optional.of(GeneroMapper.toDomain(generoEntity));
+        }
         return Optional.empty();
     }
 

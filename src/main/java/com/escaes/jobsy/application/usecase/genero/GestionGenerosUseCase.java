@@ -13,11 +13,12 @@ public class GestionGenerosUseCase {
         this.generoRepository = generoRepository;
     }
 
-    public void crearGenero(String genero) {
-        if (genero == null || genero.isBlank()) {
+    public void crearGenero(Genero genero) {
+
+        if (genero == null || genero.nombreGenero().isBlank()) {
             throw new IllegalArgumentException("El género no puede ser nulo o vacío");
         }
-        if (generoRepository.findByNombre(genero).isPresent()) {
+        if (generoRepository.findByNombre(genero.nombreGenero()).isPresent()) {
             throw new IllegalArgumentException("Ya existe un género con el nombre proporcionado");
         }
         generoRepository.save(genero);
