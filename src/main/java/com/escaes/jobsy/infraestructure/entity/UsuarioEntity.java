@@ -1,19 +1,18 @@
 package com.escaes.jobsy.infraestructure.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Date;
-import java.util.UUID;
+
 
 @Entity
 @Table (name = "TBL_USUARIOS")
-@Getter
-@Setter
+@Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UsuarioEntity {
 
     @Id
@@ -37,5 +36,9 @@ public class UsuarioEntity {
 
     @Column(name="Fecha_Nacimiento", nullable = true)
     private Date fechaNacimiento;
+
+    @ManyToOne
+    @JoinColumn(name="Genero_UUID", nullable = false)
+    private GeneroEntity genero;
 
 }

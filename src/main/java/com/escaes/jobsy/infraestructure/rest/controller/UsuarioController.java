@@ -1,7 +1,7 @@
 package com.escaes.jobsy.infraestructure.rest.controller;
 
 
-import com.escaes.jobsy.application.dto.UsuarioRequest;
+import com.escaes.jobsy.application.dto.usuario.UsuarioRequest;
 import com.escaes.jobsy.application.usecase.usuario.GestionUsuariosUseCase;
 import com.escaes.jobsy.application.usecase.usuario.ListarUsuariosUseCase;
 import com.escaes.jobsy.domain.model.Usuario;
@@ -55,6 +55,8 @@ public class UsuarioController {
     @GetMapping("/{documento}")
     public ResponseEntity<Usuario> obtenerPorDocumento(@PathVariable Integer documento) {
         Usuario usuario = gestionUsuariosUseCase.obtenerUsuarioPorDocumento(documento);
+
+
         return ResponseEntity.ok(usuario);
     }
 }

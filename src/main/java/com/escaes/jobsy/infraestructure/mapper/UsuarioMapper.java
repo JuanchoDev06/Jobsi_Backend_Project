@@ -31,17 +31,17 @@ public class UsuarioMapper {
         if (usuario == null) {
             return null;
         }
-        UsuarioEntity usuarioEntity = new UsuarioEntity();
-        usuarioEntity.setId(usuario.id() != null ? usuario.id().toString() : UUID.randomUUID().toString());
-        usuarioEntity.setNombre(usuario.nombre());
-        usuarioEntity.setDocumento(usuario.documento());
-        usuarioEntity.setCorreo(usuario.correo());
-        usuarioEntity.setClave(usuario.clave());
-        usuarioEntity.setBloqueado(usuario.bloqueado());
-        usuarioEntity.setFechaNacimiento(usuario.fechaNacimiento());
-        //usuarioEntity.setGenero(usuario.genero());
-        //usuarioEntity.setRol(usuario.rol());
-        //usuarioEntity.setTrabajos(usuario.trabajos());
-        return usuarioEntity;
+        return UsuarioEntity.builder()
+                .id(usuario.id() != null ? usuario.id().toString() : UUID.randomUUID().toString())
+                .nombre(usuario.nombre())
+                .documento(usuario.documento())
+                .correo(usuario.correo())
+                .clave(usuario.clave())
+                .bloqueado(usuario.bloqueado())
+                .fechaNacimiento(usuario.fechaNacimiento())
+                //.genero(usuario.getGenero())
+                //.rol(usuario.getRol())
+                //.trabajos(usuario.getTrabajos())
+                .build();
     }
 }

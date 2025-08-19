@@ -1,4 +1,4 @@
-package com.escaes.jobsy.application.dto;
+package com.escaes.jobsy.application.dto.usuario;
 
 public record UsuarioResponse(
         String uuid,
