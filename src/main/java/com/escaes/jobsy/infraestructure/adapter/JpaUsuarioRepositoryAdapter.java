@@ -43,7 +43,9 @@ public class JpaUsuarioRepositoryAdapter implements UsuarioRepository {
 
     @Override
     public Optional<Usuario> findByCorreo(String correo) {
-        return Optional.empty();
+
+        return springDataUsuarioRepository.findByCorreo(correo)
+                .map(UsuarioMapper::toDomain);
     }
 
     @Override

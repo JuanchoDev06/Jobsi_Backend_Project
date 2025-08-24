@@ -14,3 +14,12 @@ Content-Type: application/json
 ### Buscar usuario por ID
 GET http://localhost:8080/v1/users/2
 Accept: application/json
+
+### Login usuario
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+    "email": "carlos.ramirez@example.com.co",
+    "password":"Secr3to!"
+}
