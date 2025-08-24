@@ -1,14 +1,25 @@
 ### Crear usuario
-POST http://localhost:8080/users/crear
+POST http://localhost:8080/v1/users/crear
 Content-Type: application/json
 
 {
-  "documento": 1,
+  "documento": 2,
   "nombre": "Carlos Ramírez",
-  "email": "carlos.ramirez@example.com",
-  "password": "Secr3to!"
+  "email": "carlos.ramirez@example.com.co",
+  "password": "Secr3to!",
+  "fechaNacimiento": "1990-01-01",
+  "genero": "Alien"
 }
 
 ### Buscar usuario por ID
-GET http://localhost:8080/users/1
+GET http://localhost:8080/v1/users/2
 Accept: application/json
+
+### Login usuario
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+    "email": "carlos.ramirez@example.com.co",
+    "password":"Secr3to!"
+}

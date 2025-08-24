@@ -1,9 +1,13 @@
 package com.escaes.jobsy.infraestructure.rest.controller;
 
 
-import com.escaes.jobsy.application.dto.UsuarioRequest;
+import com.escaes.jobsy.application.dto.usuario.UsuarioRequest;
+import com.escaes.jobsy.application.usecase.genero.GestionGenerosUseCase;
+import com.escaes.jobsy.application.usecase.rol.GestionRolesUseCase;
 import com.escaes.jobsy.application.usecase.usuario.GestionUsuariosUseCase;
 import com.escaes.jobsy.application.usecase.usuario.ListarUsuariosUseCase;
+import com.escaes.jobsy.domain.model.Genero;
+import com.escaes.jobsy.domain.model.Rol;
 import com.escaes.jobsy.domain.model.Usuario;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -15,21 +19,34 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/v1/users")
 @Tag(name = "Usuarios", description = "Operaciones relacionadas con usuarios")
 public class UsuarioController {
 
     private final GestionUsuariosUseCase gestionUsuariosUseCase;
 
+    private final GestionGenerosUseCase gestionGenerosUseCase;
+
     private final ListarUsuariosUseCase listarUsuariosUseCase;
 
-    public UsuarioController(GestionUsuariosUseCase gestionUsuariosUseCase, ListarUsuariosUseCase listarUsuariosUseCase) {
+    private final GestionRolesUseCase gestionRolesUseCase;
+
+    public UsuarioController(GestionUsuariosUseCase gestionUsuariosUseCase, ListarUsuariosUseCase listarUsuariosUseCase,
+                             GestionGenerosUseCase gestionGenerosUseCase, GestionRolesUseCase gestionRolesUseCase) {
+        this.gestionRolesUseCase = gestionRolesUseCase;
+        this.gestionGenerosUseCase = gestionGenerosUseCase;
         this.gestionUsuariosUseCase = gestionUsuariosUseCase;
         this.listarUsuariosUseCase = listarUsuariosUseCase;
     }
 
     @PostMapping("/crear")
     public ResponseEntity<Map<String, Object>>crearUsuario(@RequestBody UsuarioRequest request) {
+
+        Genero genero= gestionGenerosUseCase.obtenerGeneroPorNombre(request.genero());
+
+        Rol rol = gestionRolesUseCase.obtenerRolPorNombre(
+                request.rol() != null ? request.rol() : "USER"
+        );
 
         Usuario usuario = new Usuario(
                 UUID.randomUUID(),
@@ -38,16 +55,16 @@ public class UsuarioController {
                 request.email(),
                 request.password(),
                 false,
-                null,
-                null,
-                null,
+                request.fechaNacimiento(),
+                genero,
+                rol,
                 null
         );
         gestionUsuariosUseCase.crearUsuario(usuario);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "Usuario creado exitosamente");
         response.put("data", usuario);
+        response.put("message", "Usuario creado exitosamente");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -55,6 +72,8 @@ public class UsuarioController {
     @GetMapping("/{documento}")
     public ResponseEntity<Usuario> obtenerPorDocumento(@PathVariable Integer documento) {
         Usuario usuario = gestionUsuariosUseCase.obtenerUsuarioPorDocumento(documento);
+
+
         return ResponseEntity.ok(usuario);
     }
 }

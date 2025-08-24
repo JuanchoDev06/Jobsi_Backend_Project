@@ -2,6 +2,7 @@ package com.escaes.jobsy.application.usecase.usuario;
 
 import com.escaes.jobsy.domain.model.Usuario;
 import com.escaes.jobsy.domain.repository.UsuarioRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -10,7 +11,11 @@ import java.util.UUID;
 public class GestionUsuariosUseCase {
 
     private final UsuarioRepository usuarioRepository;
-    public GestionUsuariosUseCase(UsuarioRepository usuarioRepository) {
+
+    private final PasswordEncoder passwordEncoder;
+
+    public GestionUsuariosUseCase(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
         this.usuarioRepository = usuarioRepository;
     }
 
@@ -26,7 +31,19 @@ public class GestionUsuariosUseCase {
         if (usuarioRepository.findByCorreo(usuario.correo()).isPresent()) {
             throw new IllegalArgumentException("Ya existe un usuario con el correo proporcionado");
         }
-        usuarioRepository.save(usuario);
+        String encodedPassword = passwordEncoder.encode(usuario.clave());
+        Usuario usuarioConClave = new Usuario(
+                usuario.id(),
+                usuario.nombre(),
+                usuario.documento(),
+                usuario.correo(),
+                encodedPassword,
+                usuario.bloqueado(),
+                usuario.fechaNacimiento(),
+                usuario.genero(),
+                usuario.rol(),
+                usuario.trabajos());
+        usuarioRepository.save(usuarioConClave);
     }
 
     public Usuario obtenerUsuarioPorId(UUID id) {

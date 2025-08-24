@@ -1,4 +1,6 @@
 package com.escaes.jobsy.domain.model;
 
-public record Rol() {
+import java.util.UUID;
+
+public record Rol(UUID id,String nombre, String descripcion) {
 }
