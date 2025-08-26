@@ -1,4 +1,9 @@
 package com.escaes.jobsy.domain.model;
 
-public record Trabajo() {
+import java.util.Date;
+import java.util.UUID;
+
+public record Trabajo(UUID id, String descripcion, Date fechaPublicacion,
+                      Double pago, String ubicacion, Usuario solicitante,
+                      Usuario trabajador, Categoria categoria, Estado estado) {
 }

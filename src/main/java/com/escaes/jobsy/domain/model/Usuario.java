@@ -7,5 +7,5 @@ import java.util.UUID;
 public record Usuario(UUID id,String nombre ,Integer documento, String correo,
                       String clave, Boolean bloqueado,
                       Date fechaNacimiento,
-                      Genero genero,Rol rol, List<Trabajo>trabajos) {
+                      Genero genero,Rol rol, List<Trabajo> trabajos, List<Trabajo>trabajosRealizados) {
 }

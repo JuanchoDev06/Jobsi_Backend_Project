@@ -42,7 +42,8 @@ public class GestionUsuariosUseCase {
                 usuario.fechaNacimiento(),
                 usuario.genero(),
                 usuario.rol(),
-                usuario.trabajos());
+                usuario.trabajos(),
+                usuario.trabajosRealizados());
         usuarioRepository.save(usuarioConClave);
     }
 
@@ -103,7 +104,7 @@ public class GestionUsuariosUseCase {
             throw new IllegalArgumentException("El usuario ya está bloqueado");
         }
         Usuario usuarioBloqueado = new Usuario(usuario.id(), usuario.nombre(), usuario.documento(), usuario.correo(),
-                usuario.clave(), true, usuario.fechaNacimiento(), usuario.genero(), usuario.rol(), usuario.trabajos());
+                usuario.clave(), true, usuario.fechaNacimiento(), usuario.genero(), usuario.rol(), usuario.trabajos(),usuario.trabajosRealizados());
         usuarioRepository.save(usuarioBloqueado);
     }
     public void desbloquearUsuarioPorCorreo(String correo) {
@@ -113,7 +114,7 @@ public class GestionUsuariosUseCase {
             throw new IllegalArgumentException("El usuario ya está desbloqueado");
         }
         Usuario usuarioDesbloqueado = new Usuario(usuario.id(), usuario.nombre(), usuario.documento(), usuario.correo(),
-                usuario.clave(), false, usuario.fechaNacimiento(), usuario.genero(), usuario.rol(), usuario.trabajos());
+                usuario.clave(), false, usuario.fechaNacimiento(), usuario.genero(), usuario.rol(), usuario.trabajos(),usuario.trabajosRealizados());
         usuarioRepository.save(usuarioDesbloqueado);
     }
 

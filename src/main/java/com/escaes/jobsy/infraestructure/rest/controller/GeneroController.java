@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/v1/generos")
+@RequestMapping("/v1")
 @Tag(name = "Generos", description = "Operaciones relacionadas con géneros")
 public class GeneroController {
 
@@ -31,7 +31,7 @@ public class GeneroController {
         this.listarGenerosUseCase = listarGenerosUseCase;
     }
 
-    @PostMapping("/crear")
+    @PostMapping("/gender/create")
     public ResponseEntity<Map<String, Object>> crearGenero(@RequestBody GeneroRequest request) {
 
         Genero genero = new Genero(

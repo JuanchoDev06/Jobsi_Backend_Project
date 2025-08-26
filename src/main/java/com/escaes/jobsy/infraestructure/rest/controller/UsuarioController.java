@@ -15,11 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/v1/users")
+@RequestMapping("/v1")
 @Tag(name = "Usuarios", description = "Operaciones relacionadas con usuarios")
 public class UsuarioController {
 
@@ -39,7 +40,7 @@ public class UsuarioController {
         this.listarUsuariosUseCase = listarUsuariosUseCase;
     }
 
-    @PostMapping("/crear")
+    @PostMapping("/users/create")
     public ResponseEntity<Map<String, Object>>crearUsuario(@RequestBody UsuarioRequest request) {
 
         Genero genero= gestionGenerosUseCase.obtenerGeneroPorNombre(request.genero());
@@ -58,7 +59,7 @@ public class UsuarioController {
                 request.fechaNacimiento(),
                 genero,
                 rol,
-                null
+                List.of(),List.of()
         );
         gestionUsuariosUseCase.crearUsuario(usuario);
 
@@ -69,7 +70,7 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/{documento}")
+    @GetMapping("/admin/users/{documento}")
     public ResponseEntity<Usuario> obtenerPorDocumento(@PathVariable Integer documento) {
         Usuario usuario = gestionUsuariosUseCase.obtenerUsuarioPorDocumento(documento);
 

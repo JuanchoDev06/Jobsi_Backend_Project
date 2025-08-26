@@ -5,6 +5,7 @@ import lombok.*;
 
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -39,11 +40,17 @@ public class UsuarioEntity {
     private Date fechaNacimiento;
 
     @ManyToOne
-    @JoinColumn(name="Genero_UUID", nullable = false)
+    @JoinColumn(name="Genero_UUID", nullable = false, foreignKey = @ForeignKey(name = "FK_USUARIO_GENERO"))
     private GeneroEntity genero;
 
     @ManyToOne
-    @JoinColumn(name="Rol_UUID", nullable = false)
+    @JoinColumn(name="Rol_UUID", nullable = false, foreignKey = @ForeignKey(name = "FK_USUARIO_ROL"))
     private RolEntity rol;
+
+    @OneToMany(mappedBy = "solicitante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TrabajoEntity> trabajosSolicitados;
+
+    @OneToMany(mappedBy = "trabajador", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TrabajoEntity> trabajosRealizados;
 
 }

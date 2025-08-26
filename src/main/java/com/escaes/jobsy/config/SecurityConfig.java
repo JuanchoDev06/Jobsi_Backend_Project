@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -51,12 +50,13 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
               }))
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/v1/users/crear").permitAll()
+                    .requestMatchers("/v1/users/create").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                     .requestMatchers("/h2-console/**").permitAll()
-                    .requestMatchers("/jobs/public/**").permitAll()
-                    .requestMatchers("/jobs/**").hasRole("USER")
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/v1/public/**").permitAll()
+                    .requestMatchers("/v1/jobs/**").hasRole("USER")
+                    .requestMatchers("/v1/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/v1/gender/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
