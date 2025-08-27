@@ -4,7 +4,7 @@
 # Este endpoint crea un nuevo usuario en el sistema.
 # Al crearse, se le asigna automáticamente un único rol por defecto (ej: ROLE_USER).
 # No requiere token.
-POST http://localhost:8080/v1/users/create
+POST http://localhost:8080/v1/public/users/create
 Content-Type: application/json
 
 {
@@ -54,7 +54,7 @@ Content-Type: application/json
 Authorization: Bearer
 
 {
-  "descripcion": "Instalación de software y configuración de hardware.",
+  "descripcion": "Instalación de software.",
   "pago": 150.0,
   "ubicacion": "Bogotá, Colombia",
   "categoria": "Soporte técnico"

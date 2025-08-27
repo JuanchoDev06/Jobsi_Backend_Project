@@ -2,6 +2,7 @@ package com.escaes.jobsy.infraestructure.rest.controller;
 
 
 import com.escaes.jobsy.application.dto.usuario.UsuarioRequest;
+import com.escaes.jobsy.application.dto.usuario.UsuarioResponse;
 import com.escaes.jobsy.application.usecase.genero.GestionGenerosUseCase;
 import com.escaes.jobsy.application.usecase.rol.GestionRolesUseCase;
 import com.escaes.jobsy.application.usecase.usuario.GestionUsuariosUseCase;
@@ -40,7 +41,7 @@ public class UsuarioController {
         this.listarUsuariosUseCase = listarUsuariosUseCase;
     }
 
-    @PostMapping("/users/create")
+    @PostMapping("/public/users/create")
     public ResponseEntity<Map<String, Object>>crearUsuario(@RequestBody UsuarioRequest request) {
 
         Genero genero= gestionGenerosUseCase.obtenerGeneroPorNombre(request.genero());
@@ -49,22 +50,12 @@ public class UsuarioController {
                 request.rol() != null ? request.rol() : "USER"
         );
 
-        Usuario usuario = new Usuario(
-                UUID.randomUUID(),
-                request.nombre(),
-                request.documento(),
-                request.email(),
-                request.password(),
-                false,
-                request.fechaNacimiento(),
-                genero,
-                rol,
-                List.of(),List.of()
-        );
-        gestionUsuariosUseCase.crearUsuario(usuario);
+        gestionUsuariosUseCase.crearUsuario(request,genero,rol);
+
+        UsuarioResponse data= new UsuarioResponse(null, request.nombre(), request.email(), request.rol());
 
         Map<String, Object> response = new HashMap<>();
-        response.put("data", usuario);
+        response.put("data", data);
         response.put("message", "Usuario creado exitosamente");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

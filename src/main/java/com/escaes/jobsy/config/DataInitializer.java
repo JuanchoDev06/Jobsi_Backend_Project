@@ -1,5 +1,6 @@
 package com.escaes.jobsy.config;
 
+import com.escaes.jobsy.application.dto.usuario.UsuarioRequest;
 import com.escaes.jobsy.application.usecase.genero.GestionGenerosUseCase;
 import com.escaes.jobsy.application.usecase.genero.ListarGenerosUseCase;
 import com.escaes.jobsy.application.usecase.rol.GestionRolesUseCase;
@@ -81,11 +82,9 @@ public class DataInitializer implements CommandLineRunner {
         if(listarUsuariosUseCase.contarUsuarios()==0){
             Genero genero= gestionGenerosUseCase.obtenerGeneroPorNombre("Alien");
             Rol rol= gestionRolesUseCase.obtenerRolPorNombre("ADMIN");
-            gestionUsuariosUseCase.crearUsuario(new Usuario(
-                    UUID.randomUUID(),"escaes",1107834660,
-                    "escaes@gmail.com","123",false,
-                    new Date(), genero,rol, List.of(),List.of()
-            ));
+            UsuarioRequest admin= new UsuarioRequest(1107834660,
+                    "escaes","escaes@gmail.com","123",new Date(), "","");
+            gestionUsuariosUseCase.crearUsuario(admin,genero,rol);
             System.out.println("Admin creado");
         }
     }

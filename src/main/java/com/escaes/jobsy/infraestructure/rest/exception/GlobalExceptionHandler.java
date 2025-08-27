@@ -1,6 +1,5 @@
 package com.escaes.jobsy.infraestructure.rest.exception;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -11,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
-@Profile("prod")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)

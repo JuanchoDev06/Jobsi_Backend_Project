@@ -2,6 +2,7 @@ package com.escaes.jobsy.config;
 
 import com.escaes.jobsy.config.jwt.JwtAuthFilter;
 import com.escaes.jobsy.infraestructure.service.CustomUserDetailsService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -50,7 +51,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
               }))
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/v1/users/create").permitAll()
+                    //.requestMatchers("/v1/users/create").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                     .requestMatchers("/h2-console/**").permitAll()
                     .requestMatchers("/v1/public/**").permitAll()
@@ -59,7 +60,24 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                     .requestMatchers("/v1/gender/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).exceptionHandling(ex -> ex
+                    // cuando no hay autenticación (JWT inválido, expirado, ausente)
+                    .authenticationEntryPoint((request, response, authException) -> {
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.setContentType("application/json");
+                        response.getWriter().write("""
+                    {"message":"No estás autenticado","status":401}
+                """);
+                    })
+                    // cuando sí hay token, pero rol no alcanza
+                    .accessDeniedHandler((request, response, accessDeniedException) -> {
+                        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                        response.setContentType("application/json");
+                        response.getWriter().write("""
+                    {"message":"No tienes permisos para acceder a este recurso","status":403}
+                """);
+                    })
+            )
             .build();
 }
 

@@ -6,11 +6,15 @@ import com.escaes.jobsy.application.usecase.trabajo.GestionTrabajosUseCase;
 import com.escaes.jobsy.application.usecase.trabajo.ListarTrabajosUseCase;
 import com.escaes.jobsy.domain.model.Trabajo;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Tag(name = "Trabajos",description = "Operaciones relacionadas con trabajos")
@@ -27,7 +31,7 @@ public class TrabajoController {
     }
 
     @PostMapping("/jobs/create")
-    public ResponseEntity<TrabajoResponse> crearTrabajo(
+    public ResponseEntity<Map<String, Object>> crearTrabajo(
             @RequestBody CrearTrabajoRequest request,
             Authentication authentication
     ) {
@@ -38,7 +42,7 @@ public class TrabajoController {
         Trabajo trabajo = gestionTrabajosUseCase.crearTrabajo(request, solicitanteCorreo);
 
         // Convertimos a DTO de salida
-        TrabajoResponse response = new TrabajoResponse(
+        TrabajoResponse data = new TrabajoResponse(
                 trabajo.id(),
                 trabajo.descripcion(),
                 trabajo.pago(),
@@ -48,8 +52,10 @@ public class TrabajoController {
                 trabajo.solicitante().correo(),
                 trabajo.trabajador() != null ? trabajo.trabajador().correo() : null
         );
-
-        return ResponseEntity.ok(response);
+        Map<String, Object> response= new HashMap<>();
+        response.put("data", data);
+        response.put("message","Trabajo creado con exito");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/public/all-jobs")
@@ -59,7 +65,7 @@ public class TrabajoController {
 
         List<TrabajoResponse> responses = trabajos.stream()
                 .map(trabajo -> new TrabajoResponse(
-                        trabajo.id(),
+                        null,
                         trabajo.descripcion(),
                         trabajo.pago(),
                         trabajo.ubicacion(),
