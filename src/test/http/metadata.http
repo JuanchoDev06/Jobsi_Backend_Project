@@ -1,0 +1,2 @@
+###Endpoints con metadata (requiere JWT con rol = ROLE_USER o ROLE_ADMIN)
+
