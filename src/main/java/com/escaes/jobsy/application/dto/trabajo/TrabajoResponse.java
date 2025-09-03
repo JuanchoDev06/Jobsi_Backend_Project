@@ -8,6 +8,7 @@ public record TrabajoResponse(
         UUID id,
         String descripcion,
         Double pago,
+        String tipoPago,
         String ubicacion,
         String estado,
         String categoria,

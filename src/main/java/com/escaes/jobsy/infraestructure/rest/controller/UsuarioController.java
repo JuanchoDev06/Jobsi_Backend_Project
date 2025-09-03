@@ -11,6 +11,7 @@ import com.escaes.jobsy.domain.model.Genero;
 import com.escaes.jobsy.domain.model.Rol;
 import com.escaes.jobsy.domain.model.Usuario;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/v1")
 @Tag(name = "Usuarios", description = "Operaciones relacionadas con usuarios")
+@RequiredArgsConstructor
 public class UsuarioController {
 
     private final GestionUsuariosUseCase gestionUsuariosUseCase;
@@ -32,13 +34,6 @@ public class UsuarioController {
 
     private final GestionRolesUseCase gestionRolesUseCase;
 
-    public UsuarioController(GestionUsuariosUseCase gestionUsuariosUseCase, ListarUsuariosUseCase listarUsuariosUseCase,
-                             GestionGenerosUseCase gestionGenerosUseCase, GestionRolesUseCase gestionRolesUseCase) {
-        this.gestionRolesUseCase = gestionRolesUseCase;
-        this.gestionGenerosUseCase = gestionGenerosUseCase;
-        this.gestionUsuariosUseCase = gestionUsuariosUseCase;
-        this.listarUsuariosUseCase = listarUsuariosUseCase;
-    }
 
     @PostMapping("/public/users/create")
     public ResponseEntity<Map<String, Object>>crearUsuario(@RequestBody UsuarioRequest request) {

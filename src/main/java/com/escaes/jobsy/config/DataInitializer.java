@@ -1,5 +1,6 @@
 package com.escaes.jobsy.config;
 
+import com.escaes.jobsy.application.dto.pago.PagoRequest;
 import com.escaes.jobsy.application.dto.usuario.UsuarioRequest;
 import com.escaes.jobsy.application.usecase.categoria.GestionCategoriasUseCase;
 import com.escaes.jobsy.application.usecase.categoria.ListarCategoriasUseCase;
@@ -7,31 +8,25 @@ import com.escaes.jobsy.application.usecase.estado.GestionEstadosUseCase;
 import com.escaes.jobsy.application.usecase.estado.ListarEstadosUseCase;
 import com.escaes.jobsy.application.usecase.genero.GestionGenerosUseCase;
 import com.escaes.jobsy.application.usecase.genero.ListarGenerosUseCase;
+
+import com.escaes.jobsy.application.usecase.pago.GestionPagosUseCase;
+import com.escaes.jobsy.application.usecase.pago.ListarPagosUseCase;
 import com.escaes.jobsy.application.usecase.rol.GestionRolesUseCase;
 import com.escaes.jobsy.application.usecase.rol.ListarRolesUseCase;
-import com.escaes.jobsy.application.usecase.trabajo.GestionTrabajosUseCase;
 import com.escaes.jobsy.application.usecase.usuario.GestionUsuariosUseCase;
 import com.escaes.jobsy.application.usecase.usuario.ListarUsuariosUseCase;
-import com.escaes.jobsy.domain.model.Categoria;
+
+
 import com.escaes.jobsy.domain.model.Genero;
+import com.escaes.jobsy.domain.model.Pago;
 import com.escaes.jobsy.domain.model.Rol;
-import com.escaes.jobsy.domain.model.Usuario;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
+
 import java.util.UUID;
 
 @Component
@@ -59,6 +54,10 @@ public class DataInitializer implements CommandLineRunner {
 
     private final ListarCategoriasUseCase listarCategoriasUseCase;
 
+    private final ListarPagosUseCase listarPagosUseCase;
+
+    private final GestionPagosUseCase gestionPagosUseCase;
+
 
     @Override
     public void run(String... args) throws Exception {
@@ -67,6 +66,7 @@ public class DataInitializer implements CommandLineRunner {
         initializeAdmin();
         initializeEstados();
         initializeCategorias();
+        initializeTipoPagos();
     }
 
     private void initializeGeneros() {
@@ -116,6 +116,15 @@ public class DataInitializer implements CommandLineRunner {
                     "escaes","escaes@gmail.com","123",new Date(), "","");
             gestionUsuariosUseCase.crearUsuario(admin,genero,rol);
             System.out.println("Admin creado");
+        }
+    }
+    private void initializeTipoPagos(){
+        if(listarPagosUseCase.contarTipoDePagos()==0){
+            gestionPagosUseCase.crearTipoPago(new PagoRequest("EFECTIVO"));
+            gestionPagosUseCase.crearTipoPago(new PagoRequest("TRANSFERENCIA"));
+            gestionPagosUseCase.crearTipoPago(new PagoRequest("INTERCAMBIO"));
+            gestionPagosUseCase.crearTipoPago(new PagoRequest("OTRO"));
+            System.out.println("Tipo de pago creado");
         }
     }
 }

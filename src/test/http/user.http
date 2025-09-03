@@ -10,6 +10,7 @@ Authorization: Bearer
 {
   "descripcion": "Instalación de software.",
   "pago": 150.0,
+  "tipoPago": "Efectivo",
   "ubicacion": "Bogotá, Colombia",
   "categoria": "OTRO"
 }
