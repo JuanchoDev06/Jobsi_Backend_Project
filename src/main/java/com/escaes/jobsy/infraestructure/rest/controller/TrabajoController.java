@@ -46,7 +46,7 @@ public class TrabajoController {
                 trabajo.descripcion(),
                 trabajo.pago(),
                 trabajo.ubicacion(),
-                null,
+                trabajo.estado() !=null ? trabajo.estado().nombre() : null,
                 trabajo.categoria() != null ? trabajo.categoria().nombre() : null,
                 trabajo.solicitante().correo(),
                 trabajo.trabajador() != null ? trabajo.trabajador().correo() : null
@@ -78,5 +78,8 @@ public class TrabajoController {
         return ResponseEntity.ok(responses);
 
     }
+
+//    @GetMapping("/jobs/my-jobs")
+//    public ResponseEntity<List<TrabajoResponse>> obtenerTrabajosMyJobs(){}
 
 }
