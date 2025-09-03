@@ -1,6 +1,5 @@
 package com.escaes.jobsy.domain.repository;
 
-import com.escaes.jobsy.domain.model.Genero;
 import com.escaes.jobsy.domain.model.Rol;
 
 import java.util.List;

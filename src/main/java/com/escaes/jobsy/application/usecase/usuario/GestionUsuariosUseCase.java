@@ -1,10 +1,14 @@
 package com.escaes.jobsy.application.usecase.usuario;
 
+import com.escaes.jobsy.application.dto.usuario.UsuarioRequest;
+import com.escaes.jobsy.domain.model.Genero;
+import com.escaes.jobsy.domain.model.Rol;
 import com.escaes.jobsy.domain.model.Usuario;
 import com.escaes.jobsy.domain.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 @Service
@@ -19,30 +23,31 @@ public class GestionUsuariosUseCase {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public void crearUsuario(Usuario usuario) {
+    public void crearUsuario(UsuarioRequest request, Genero genero, Rol rol) {
 
-        if (usuario == null) {
+        if (request == null) {
             throw new IllegalArgumentException("El usuario no puede ser nulo");
         }
-        if(usuarioRepository.findByDocumento(usuario.documento()).isPresent()) {
+        if(usuarioRepository.findByDocumento(request.documento()).isPresent()) {
             throw new IllegalArgumentException("Ya existe un usuario con el documento proporcionado");
         }
 
-        if (usuarioRepository.findByCorreo(usuario.correo()).isPresent()) {
+        if (usuarioRepository.findByCorreo(request.email()).isPresent()) {
             throw new IllegalArgumentException("Ya existe un usuario con el correo proporcionado");
         }
-        String encodedPassword = passwordEncoder.encode(usuario.clave());
+        String encodedPassword = passwordEncoder.encode(request.password());
         Usuario usuarioConClave = new Usuario(
-                usuario.id(),
-                usuario.nombre(),
-                usuario.documento(),
-                usuario.correo(),
+                UUID.randomUUID(),
+                request.nombre(),
+                request.documento(),
+                request.email(),
                 encodedPassword,
-                usuario.bloqueado(),
-                usuario.fechaNacimiento(),
-                usuario.genero(),
-                usuario.rol(),
-                usuario.trabajos());
+                false,
+                request.fechaNacimiento(),
+                genero,
+                rol,
+                List.of(),
+                List.of());
         usuarioRepository.save(usuarioConClave);
     }
 
@@ -103,7 +108,7 @@ public class GestionUsuariosUseCase {
             throw new IllegalArgumentException("El usuario ya está bloqueado");
         }
         Usuario usuarioBloqueado = new Usuario(usuario.id(), usuario.nombre(), usuario.documento(), usuario.correo(),
-                usuario.clave(), true, usuario.fechaNacimiento(), usuario.genero(), usuario.rol(), usuario.trabajos());
+                usuario.clave(), true, usuario.fechaNacimiento(), usuario.genero(), usuario.rol(), usuario.trabajos(),usuario.trabajosRealizados());
         usuarioRepository.save(usuarioBloqueado);
     }
     public void desbloquearUsuarioPorCorreo(String correo) {
@@ -113,7 +118,7 @@ public class GestionUsuariosUseCase {
             throw new IllegalArgumentException("El usuario ya está desbloqueado");
         }
         Usuario usuarioDesbloqueado = new Usuario(usuario.id(), usuario.nombre(), usuario.documento(), usuario.correo(),
-                usuario.clave(), false, usuario.fechaNacimiento(), usuario.genero(), usuario.rol(), usuario.trabajos());
+                usuario.clave(), false, usuario.fechaNacimiento(), usuario.genero(), usuario.rol(), usuario.trabajos(),usuario.trabajosRealizados());
         usuarioRepository.save(usuarioDesbloqueado);
     }
 
