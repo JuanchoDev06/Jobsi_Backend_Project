@@ -1,0 +1,46 @@
+###Endpoints para rol ADMIN (requiere JWT con rol = ROLE_ADMIN)
+
+# Permite a un administrador consultar la información de un usuario
+# a partir de su documento de identificación.
+# IMPORTANTE: Requiere agregar el token en Authorization: Bearer <jwt>
+GET http://localhost:8080/v1/admin/users/2
+Accept: application/json
+Authorization: Bearer
+
+###Crear usuario como administrador, incluye rol
+POST http://localhost:8080/v1/public/users/create
+Content-Type: application/json
+
+{
+  "documento": 2,
+  "nombre": "Carlos Ramírez",
+  "email": "user@gmail.com",
+  "password": "123",
+  "fechaNacimiento": "1990-01-01",
+  "genero": "Alien",
+  "rol": "ADMIN"
+}
+
+
+###Obtener todas las categorias registradas
+GET http://localhost:8080/v1/admin/category-all
+Accept: application/json
+Authorization: Bearer
+
+
+###Obtener categoria por nombre
+GET http://localhost:8080/v1/admin/category/tareas
+Accept: application/json
+Authorization: Bearer
+
+
+
+###Crear categoria
+POST http://localhost:8080/v1/admin/category/create
+Content-Type: application/json
+Authorization: Bearer
+
+{
+    "nombre": "Categoria Prueba"
+}
+

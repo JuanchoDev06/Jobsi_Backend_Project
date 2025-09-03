@@ -43,7 +43,7 @@ public class CategoriaController {
     }
 
     @PostMapping("/admin/category/create")
-    public ResponseEntity<Map<String, String>> createCategoria(CategoriaRequest request){
+    public ResponseEntity<Map<String, String>> createCategoria(@RequestBody CategoriaRequest request){
 
         gestionCategoriasUseCase.crearCategoria(request.nombre());
 

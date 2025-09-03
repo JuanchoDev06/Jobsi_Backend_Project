@@ -30,7 +30,7 @@ public class EstadoController {
     }
 
     @PostMapping("/admin/create/state")
-    public ResponseEntity<Map<String,Object>> createEstado(EstadoRequest request){
+    public ResponseEntity<Map<String,Object>> createEstado(@RequestBody EstadoRequest request){
 
         gestionEstadosUseCase.crearEstado(request.nombre());
 

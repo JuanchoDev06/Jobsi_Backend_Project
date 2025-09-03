@@ -39,8 +39,13 @@ public class TrabajoEntity {
     @JoinColumn(name="Trabajador_UUID", nullable = true, foreignKey = @ForeignKey(name = "FK_TRABAJO_TRABAJADOR"))
     private UsuarioEntity trabajador;
 
-    /*
-    Falta categorias y estado
-     */
+
+    @ManyToOne
+    @JoinColumn(name = "Estados_AIID",nullable = false,foreignKey = @ForeignKey(name = "FK_TRABAJO_ESTADOS"))
+    private EstadoEntity estado;
+
+    @ManyToOne
+    @JoinColumn(name = "Categorias_AIID",nullable = false, foreignKey =@ForeignKey(name = "FK_TRABAJO_CATEGORIAS"))
+    private CategoriaEntity categoria;
 
 }
