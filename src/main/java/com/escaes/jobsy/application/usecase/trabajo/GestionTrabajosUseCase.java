@@ -1,14 +1,8 @@
 package com.escaes.jobsy.application.usecase.trabajo;
 
 import com.escaes.jobsy.application.dto.trabajo.CrearTrabajoRequest;
-import com.escaes.jobsy.domain.model.Categoria;
-import com.escaes.jobsy.domain.model.Estado;
-import com.escaes.jobsy.domain.model.Trabajo;
-import com.escaes.jobsy.domain.model.Usuario;
-import com.escaes.jobsy.domain.repository.CategoriaRepository;
-import com.escaes.jobsy.domain.repository.EstadoRepository;
-import com.escaes.jobsy.domain.repository.TrabajoRepository;
-import com.escaes.jobsy.domain.repository.UsuarioRepository;
+import com.escaes.jobsy.domain.model.*;
+import com.escaes.jobsy.domain.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,16 +21,21 @@ public class GestionTrabajosUseCase {
 
     private final CategoriaRepository categoriaRepository;
 
+    private final PagoRepository  pagoRepository;
+
     public Trabajo crearTrabajo(CrearTrabajoRequest request, String solicitanteCorreo) {
 
         Usuario userSolcitante =usuarioRepository.findByCorreo(solicitanteCorreo)
-                .orElseThrow(()-> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(()-> new IllegalArgumentException("Usuario no encontrado"));
 
         Categoria categoria = categoriaRepository.findByNombre(request.categoria())
-                .orElseThrow(()->new RuntimeException("Categoria no encontrado"));
+                .orElseThrow(()->new IllegalArgumentException("Categoria no encontrado"));
 
         Estado estado= estadoRepository.findByNombre("PENDIENTE")
-                .orElseThrow(()-> new RuntimeException("Estado no encontrado"));
+                .orElseThrow(()-> new IllegalArgumentException("Estado no encontrado"));
+
+        Pago tipoPago= pagoRepository.findByNombre(request.tipoPago())
+                .orElseThrow(()->new IllegalArgumentException("Tipo de pago no encontrado"));
 
         Trabajo trabajo= new Trabajo(
                 UUID.randomUUID(),
@@ -47,7 +46,8 @@ public class GestionTrabajosUseCase {
                 userSolcitante,
                 null,
                 categoria,
-                estado
+                estado,
+                tipoPago
         );
         trabajoRepository.save(trabajo);
 

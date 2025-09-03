@@ -45,6 +45,7 @@ public class TrabajoController {
                 trabajo.id(),
                 trabajo.descripcion(),
                 trabajo.pago(),
+                trabajo.tipoPago() !=null ? trabajo.tipoPago().nombrePago() : null,
                 trabajo.ubicacion(),
                 trabajo.estado() !=null ? trabajo.estado().nombre() : null,
                 trabajo.categoria() != null ? trabajo.categoria().nombre() : null,
@@ -67,9 +68,9 @@ public class TrabajoController {
                         null,
                         trabajo.descripcion(),
                         trabajo.pago(),
+                        trabajo.tipoPago() !=null ? trabajo.tipoPago().nombrePago() : null,
                         trabajo.ubicacion(),
-                        //trabajo.estado().toString()
-                        null,
+                        null,//estado
                         trabajo.categoria() != null ? trabajo.categoria().nombre() : null,
                         trabajo.solicitante() != null ? trabajo.solicitante().correo() : null,
                         trabajo.trabajador() != null ? trabajo.trabajador().correo() : null

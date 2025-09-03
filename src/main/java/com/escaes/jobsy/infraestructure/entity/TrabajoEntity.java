@@ -48,4 +48,7 @@ public class TrabajoEntity {
     @JoinColumn(name = "Categorias_AIID",nullable = false, foreignKey =@ForeignKey(name = "FK_TRABAJO_CATEGORIAS"))
     private CategoriaEntity categoria;
 
+    @ManyToOne
+    @JoinColumn(name = "Tipos_De_Pago_UUID",nullable = true,foreignKey = @ForeignKey(name = "FK_TRABAJO_TIPO_PAGO"))
+    private PagoEntity tipoPago;
 }

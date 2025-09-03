@@ -20,7 +20,8 @@ public class TrabajoMapper {
             trabajoEntity.getSolicitante() !=null ? UsuarioMapper.toDomainBasic(trabajoEntity.getSolicitante()): null,
             trabajoEntity.getTrabajador() != null ? UsuarioMapper.toDomainBasic(trabajoEntity.getTrabajador()): null,
             CategoriaMapper.toDomain(trabajoEntity.getCategoria()),
-            EstadoMapper.toDomain(trabajoEntity.getEstado())
+            EstadoMapper.toDomain(trabajoEntity.getEstado()),
+            PagoMapper.toDomain(trabajoEntity.getTipoPago())
         );
     }
     public static TrabajoEntity toEntity(Trabajo trabajo) {
@@ -36,7 +37,8 @@ public class TrabajoMapper {
                 trabajo.solicitante() != null ? UsuarioMapper.toEntity(trabajo.solicitante()): null,
                 trabajo.trabajador() != null ? UsuarioMapper.toEntity(trabajo.trabajador()): null,
                 EstadoMapper.toEntity(trabajo.estado()),
-                CategoriaMapper.toEntity(trabajo.categoria())
+                CategoriaMapper.toEntity(trabajo.categoria()),
+                PagoMapper.toEntity(trabajo.tipoPago())
 
         );
     }
