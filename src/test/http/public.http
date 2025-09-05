@@ -27,6 +27,25 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "email": "user@gmail.com",
+  "email": "escaes@gmail.com",
   "password":"123"
 }
+
+
+###Departamentos de Colombia
+GET http://localhost:8080/v1/public/departments
+accept: application/json
+
+###Ciudades de un departamento de Colombia
+#Muestra las ciudades del departamento de Antioquia
+GET http://localhost:8080/v1/public/departments/ant/municipalities
+accept: application/json
+
+###Obtener Instituciones
+GET http://localhost:8080/v1/public/institutions-all
+accept: application/json
+
+###Obtener institucion por codigo departamento y codigo municipio
+#Institucion del departamento de Antioquia y municipio de Medellin
+GET http://localhost:8080/v1/public/institutions/ANT/MED
+accept: application/json
