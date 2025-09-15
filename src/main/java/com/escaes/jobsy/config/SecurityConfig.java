@@ -58,6 +58,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                     .requestMatchers("/v1/jobs/**").hasRole("USER")
                     .requestMatchers("/v1/admin/**").hasRole("ADMIN")
                     .requestMatchers("/v1/gender/**").hasRole("ADMIN")
+                    .requestMatchers("/v1/lookups/**").hasAnyRole("ADMIN", "USER")
                     .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).exceptionHandling(ex -> ex

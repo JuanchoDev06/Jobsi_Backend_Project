@@ -1,0 +1,24 @@
+###Endpoints con metadata (requiere JWT con rol = ROLE_USER o ROLE_ADMIN)
+
+#Todas las categorias
+GET http://localhost:8080/v1/lookups/category-all
+Accept: application/json
+Authorization: Bearer
+
+
+###Todos los tipos de estado
+GET http://localhost:8080/v1/lookups/state-all
+Accept: application/json
+Authorization: Bearer
+
+
+###Todos los tipos de genero
+GET http://localhost:8080/v1/lookups/gender-all
+accept: application/json
+Authorization: Bearer
+
+
+###Todos los tipos de pago
+GET http://localhost:8080/v1/lookups/payment-all
+accept: application/json
+Authorization: Bearer
