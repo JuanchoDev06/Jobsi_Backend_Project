@@ -3,17 +3,18 @@ package com.escaes.jobsy.application.usecase.pago;
 import com.escaes.jobsy.application.dto.pago.PagoRequest;
 import com.escaes.jobsy.domain.model.Pago;
 import com.escaes.jobsy.domain.repository.PagoRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 @Service
+@RequiredArgsConstructor
 public class GestionPagosUseCase {
 
     private final PagoRepository pagoRepository;
 
-    public GestionPagosUseCase(PagoRepository pagoRepository) {
-        this.pagoRepository = pagoRepository;
-    }
 
     public void crearTipoPago(PagoRequest request) {
         if (request.nombre() == null || request.nombre().isBlank()) {

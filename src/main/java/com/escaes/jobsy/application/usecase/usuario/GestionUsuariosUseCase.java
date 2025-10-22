@@ -5,23 +5,22 @@ import com.escaes.jobsy.domain.model.Genero;
 import com.escaes.jobsy.domain.model.Rol;
 import com.escaes.jobsy.domain.model.Usuario;
 import com.escaes.jobsy.domain.repository.UsuarioRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 @Service
+@RequiredArgsConstructor
 public class GestionUsuariosUseCase {
 
     private final UsuarioRepository usuarioRepository;
 
     private final PasswordEncoder passwordEncoder;
 
-    public GestionUsuariosUseCase(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-        this.usuarioRepository = usuarioRepository;
-    }
 
     public void crearUsuario(UsuarioRequest request, Genero genero, Rol rol) {
 
@@ -82,12 +81,12 @@ public class GestionUsuariosUseCase {
         usuarioRepository.deleteById(id);
     }
     public void eliminarUsuarioPorDocumento(Integer documento) {
-        Optional<Usuario> usuario = usuarioRepository.findByDocumento(documento);
+        usuarioRepository.findByDocumento(documento);
 
         usuarioRepository.deleteByDocumento(documento);
     }
     public void eliminarUsuarioPorCorreo(String correo) {
-        Usuario usuario = usuarioRepository.findByCorreo(correo)
+        usuarioRepository.findByCorreo(correo)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con el correo proporcionado"));
         usuarioRepository.deleteByCorreo(correo);
     }

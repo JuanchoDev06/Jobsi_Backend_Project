@@ -1,7 +1,6 @@
 package com.escaes.jobsy.domain.repository;
 
 import com.escaes.jobsy.domain.model.Genero;
-import com.escaes.jobsy.domain.model.Usuario;
 
 import java.util.List;
 import java.util.Optional;

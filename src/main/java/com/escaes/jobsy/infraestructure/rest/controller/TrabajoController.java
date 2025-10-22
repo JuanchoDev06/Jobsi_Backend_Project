@@ -13,9 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Tag(name = "Trabajos",description = "Operaciones relacionadas con trabajos")
@@ -36,7 +34,7 @@ public class TrabajoController {
         String solicitanteCorreo = authentication.getName();
 
         // Ejecutamos el caso de uso
-        Trabajo trabajo = gestionTrabajosUseCase.crearTrabajo(request, solicitanteCorreo);
+        gestionTrabajosUseCase.crearTrabajo(request, solicitanteCorreo);
 
 
         return ResponseEntity.status(HttpStatus.CREATED).body(TrabajoMapper.requestToResponse(request,solicitanteCorreo));
