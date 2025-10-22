@@ -1,5 +1,6 @@
 package com.escaes.jobsy.application.usecase.estado;
 
+import com.escaes.jobsy.application.dto.estado.EstadoRequest;
 import com.escaes.jobsy.domain.model.Estado;
 import com.escaes.jobsy.domain.repository.EstadoRepository;
 import org.springframework.stereotype.Service;
@@ -13,14 +14,14 @@ public class GestionEstadosUseCase {
         this.estadoRepository = estadoRepository;
     }
 
-    public void crearEstado(String nombreEstado){
-        if (nombreEstado == null){
+    public void crearEstado(EstadoRequest request){
+        if (request.nombre() == null){
             throw new IllegalArgumentException("El nombre de estado es null");
         }
-        if(estadoRepository.findByNombre(nombreEstado).isPresent()){
+        if(estadoRepository.findByNombre(request.nombre()).isPresent()){
             throw new IllegalArgumentException("El nombre de estado ya existe");
         }
-        Estado estado = new Estado(null,nombreEstado);
+        Estado estado = new Estado(null, request.nombre());
 
         estadoRepository.save(estado);
     }

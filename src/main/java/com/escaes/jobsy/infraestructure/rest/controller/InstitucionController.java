@@ -9,6 +9,7 @@ import com.escaes.jobsy.application.service.UbicacionService;
 import com.escaes.jobsy.application.usecase.institucion.GestionInstitucionesUseCase;
 import com.escaes.jobsy.application.usecase.institucion.ListarInstitucionesUseCase;
 import com.escaes.jobsy.domain.model.Institucion;
+import com.escaes.jobsy.infraestructure.mapper.InstitucionMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,10 +32,10 @@ public class InstitucionController {
 
     // ------------------- Crear institución -------------------
     @PostMapping("/admin/create-institution")
-    public ResponseEntity<String> crearInstitucion(@RequestBody InstitucionRequest request) {
+    public ResponseEntity<InstitucionResponse> crearInstitucion(@RequestBody InstitucionRequest request) {
         gestionInstitucionesUseCase.crearInstitucion(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Institución creada correctamente");
+                .body(InstitucionMapper.requestToResponse(request));
     }
 
     //Obtener departamentos y municipios relacionados en un JSON
@@ -54,12 +55,7 @@ public class InstitucionController {
     //Obtener municipios relacionados a un departamento
     @GetMapping("/public/departments/{code}/municipalities")
     public ResponseEntity<List<Municipio>> listarMunicipios(@PathVariable String code) {
-        Departamento depto = ubicacionService.listarDepartamentos().stream()
-                .filter(d -> d.codigo().equalsIgnoreCase(code))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Departamento no encontrado"));
-
-        return ResponseEntity.ok(depto.municipios());
+        return ResponseEntity.ok(ubicacionService.municipiosPorDepartamento(code));
     }
     //Obtener instituciones asociadadas a departamento y municipio
     @GetMapping("/public/institutions/{departamentoCodigo}/{municipioCodigo}")
@@ -75,7 +71,7 @@ public class InstitucionController {
 
         return ResponseEntity.ok(
                 instituciones.stream()
-                        .map(i -> new InstitucionResponse(i.id(), i.nombre(), i.departamento(), i.municipio()))
+                        .map(InstitucionMapper::entityToResponse)
                         .toList()
         );
     }
@@ -83,7 +79,7 @@ public class InstitucionController {
     @GetMapping("/public/institutions-all")
     public ResponseEntity<List<InstitucionResponse>> getInstituciones() {
         return ResponseEntity.ok(listarInstitucionesUseCase.listarInstituciones().stream()
-                .map(i->new InstitucionResponse(null,i.nombre(),i.departamento(),i.municipio())).toList());
+                .map(InstitucionMapper::entityToResponse).toList());
     }
 
 }

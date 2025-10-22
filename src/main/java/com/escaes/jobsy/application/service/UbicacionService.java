@@ -53,4 +53,12 @@ public class UbicacionService {
     public List<Departamento> listarDepartamentos() {
         return departamentos;
     }
+
+    public List<Municipio> municipiosPorDepartamento(String codigoDepto) {
+         Departamento depto=listarDepartamentos().stream()
+                .filter(d -> d.codigo().equalsIgnoreCase(codigoDepto))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Departamento no encontrado"));
+         return depto.municipios();
+    }
 }

@@ -1,5 +1,6 @@
 package com.escaes.jobsy.application.usecase.genero;
 
+import com.escaes.jobsy.application.dto.genero.GeneroRequest;
 import com.escaes.jobsy.domain.model.Genero;
 import com.escaes.jobsy.domain.repository.GeneroRepository;
 import org.springframework.stereotype.Service;
@@ -13,14 +14,17 @@ public class GestionGenerosUseCase {
         this.generoRepository = generoRepository;
     }
 
-    public void crearGenero(Genero genero) {
+    public void crearGenero(GeneroRequest request) {
 
-        if (genero == null || genero.nombreGenero().isBlank()) {
+        if (request == null || request.nombre().isBlank()) {
             throw new IllegalArgumentException("El género no puede ser nulo o vacío");
         }
-        if (generoRepository.findByNombre(genero.nombreGenero()).isPresent()) {
+        if (generoRepository.findByNombre(request.nombre()).isPresent()) {
             throw new IllegalArgumentException("Ya existe un género con el nombre proporcionado");
         }
+        Genero genero= new Genero(
+                null, request.nombre()
+        );
         generoRepository.save(genero);
     }
     public Genero obtenerGeneroPorId(Long id) {
