@@ -10,6 +10,7 @@ import com.escaes.jobsy.application.usecase.usuario.ListarUsuariosUseCase;
 import com.escaes.jobsy.domain.model.Genero;
 import com.escaes.jobsy.domain.model.Rol;
 import com.escaes.jobsy.domain.model.Usuario;
+import com.escaes.jobsy.infraestructure.mapper.UsuarioMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
@@ -36,7 +38,7 @@ public class UsuarioController {
 
 
     @PostMapping("/public/users/create")
-    public ResponseEntity<Map<String, Object>>crearUsuario(@RequestBody UsuarioRequest request) {
+    public ResponseEntity<UsuarioResponse>crearUsuario(@RequestBody UsuarioRequest request) {
 
         Genero genero= gestionGenerosUseCase.obtenerGeneroPorNombre(request.genero());
 
@@ -46,20 +48,15 @@ public class UsuarioController {
 
         gestionUsuariosUseCase.crearUsuario(request,genero,rol);
 
-        UsuarioResponse data= new UsuarioResponse(null, request.nombre(), request.email(), request.rol());
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("data", data);
-        response.put("message", "Usuario creado exitosamente");
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.requestToResponse(request));
     }
 
     @GetMapping("/admin/users/{documento}")
-    public ResponseEntity<Usuario> obtenerPorDocumento(@PathVariable Integer documento) {
+    public ResponseEntity<UsuarioResponse> obtenerPorDocumento(@PathVariable Integer documento) {
+
         Usuario usuario = gestionUsuariosUseCase.obtenerUsuarioPorDocumento(documento);
 
-
-        return ResponseEntity.ok(usuario);
+        return ResponseEntity.ok(UsuarioMapper.entityToResponse(usuario));
     }
 }

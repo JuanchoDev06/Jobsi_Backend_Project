@@ -1,5 +1,6 @@
 package com.escaes.jobsy.infraestructure.mapper;
 
+import com.escaes.jobsy.application.dto.pago.PagoResponse;
 import com.escaes.jobsy.domain.model.Pago;
 import com.escaes.jobsy.infraestructure.entity.PagoEntity;
 
@@ -20,6 +21,14 @@ public class PagoMapper {
         }
         return new PagoEntity(
                 pago.id(),
+                pago.nombrePago()
+        );
+    }
+    public static PagoResponse toResponse(Pago pago) {
+        if (pago == null) {
+            return null;
+        }
+        return new PagoResponse(
                 pago.nombrePago()
         );
     }

@@ -5,7 +5,9 @@ import com.escaes.jobsy.application.dto.trabajo.TrabajoResponse;
 import com.escaes.jobsy.application.usecase.trabajo.GestionTrabajosUseCase;
 import com.escaes.jobsy.application.usecase.trabajo.ListarTrabajosUseCase;
 import com.escaes.jobsy.domain.model.Trabajo;
+import com.escaes.jobsy.infraestructure.mapper.TrabajoMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,19 +20,15 @@ import java.util.Map;
 @RestController
 @Tag(name = "Trabajos",description = "Operaciones relacionadas con trabajos")
 @RequestMapping("/v1")
+@RequiredArgsConstructor
 public class TrabajoController {
 
     private final GestionTrabajosUseCase gestionTrabajosUseCase;
 
     private final ListarTrabajosUseCase  listarTrabajosUseCase;
 
-    public TrabajoController(GestionTrabajosUseCase gestionTrabajosUseCase,  ListarTrabajosUseCase listarTrabajosUseCase) {
-        this.gestionTrabajosUseCase = gestionTrabajosUseCase;
-        this.listarTrabajosUseCase = listarTrabajosUseCase;
-    }
-
     @PostMapping("/jobs/create")
-    public ResponseEntity<Map<String, Object>> crearTrabajo(
+    public ResponseEntity<TrabajoResponse> crearTrabajo(
             @RequestBody CrearTrabajoRequest request,
             Authentication authentication
     ) {
@@ -40,41 +38,19 @@ public class TrabajoController {
         // Ejecutamos el caso de uso
         Trabajo trabajo = gestionTrabajosUseCase.crearTrabajo(request, solicitanteCorreo);
 
-        // Convertimos a DTO de salida
-        TrabajoResponse data = new TrabajoResponse(
-                trabajo.id(),
-                trabajo.descripcion(),
-                trabajo.pago(),
-                trabajo.tipoPago() !=null ? trabajo.tipoPago().nombrePago() : null,
-                trabajo.ubicacion(),
-                trabajo.estado() !=null ? trabajo.estado().nombre() : null,
-                trabajo.categoria() != null ? trabajo.categoria().nombre() : null,
-                trabajo.solicitante().correo(),
-                trabajo.trabajador() != null ? trabajo.trabajador().correo() : null
-        );
-        Map<String, Object> response= new HashMap<>();
-        response.put("data", data);
-        response.put("message","Trabajo creado con exito");
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(TrabajoMapper.requestToResponse(request,solicitanteCorreo));
     }
 
     @GetMapping("/public/all-jobs")
     public ResponseEntity<List<TrabajoResponse>> obtenerTrabajos(){
 
+        // Ejecutamos el caso de uso
         List<Trabajo> trabajos= listarTrabajosUseCase.listar();
 
         List<TrabajoResponse> responses = trabajos.stream()
-                .map(trabajo -> new TrabajoResponse(
-                        null,
-                        trabajo.descripcion(),
-                        trabajo.pago(),
-                        trabajo.tipoPago() !=null ? trabajo.tipoPago().nombrePago() : null,
-                        trabajo.ubicacion(),
-                        null,//estado
-                        trabajo.categoria() != null ? trabajo.categoria().nombre() : null,
-                        trabajo.solicitante() != null ? trabajo.solicitante().correo() : null,
-                        trabajo.trabajador() != null ? trabajo.trabajador().correo() : null
-                ))
+                .map(TrabajoMapper::entityToResponse
+                )
                 .toList();
         return ResponseEntity.ok(responses);
 

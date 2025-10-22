@@ -1,5 +1,7 @@
 package com.escaes.jobsy.config;
 
+import com.escaes.jobsy.application.dto.estado.EstadoRequest;
+import com.escaes.jobsy.application.dto.genero.GeneroRequest;
 import com.escaes.jobsy.application.dto.pago.PagoRequest;
 import com.escaes.jobsy.application.dto.usuario.UsuarioRequest;
 import com.escaes.jobsy.application.usecase.categoria.GestionCategoriasUseCase;
@@ -18,7 +20,6 @@ import com.escaes.jobsy.application.usecase.usuario.ListarUsuariosUseCase;
 
 
 import com.escaes.jobsy.domain.model.Genero;
-import com.escaes.jobsy.domain.model.Pago;
 import com.escaes.jobsy.domain.model.Rol;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -71,10 +72,10 @@ public class DataInitializer implements CommandLineRunner {
 
     private void initializeGeneros() {
         if(listarGenerosUseCase.contarGeneros()==0){
-            gestionGenerosUseCase.crearGenero(new Genero(null, "Masculino"));
-            gestionGenerosUseCase.crearGenero(new Genero(null, "Femenino"));
-            gestionGenerosUseCase.crearGenero(new Genero(null, "Alien"));
-            gestionGenerosUseCase.crearGenero(new Genero(null, "Otro"));
+            gestionGenerosUseCase.crearGenero(new GeneroRequest( "Masculino"));
+            gestionGenerosUseCase.crearGenero(new GeneroRequest( "Femenino"));
+            gestionGenerosUseCase.crearGenero(new GeneroRequest( "Alien"));
+            gestionGenerosUseCase.crearGenero(new GeneroRequest( "Otro"));
             System.out.println("Generos creados");
         }
 
@@ -91,11 +92,11 @@ public class DataInitializer implements CommandLineRunner {
     }
     private void initializeEstados(){
         if (listarEstadosUseCase.contarEstados()==0){
-            gestionEstadosUseCase.crearEstado("PENDIENTE");
-            gestionEstadosUseCase.crearEstado("FINALIZADO");
-            gestionEstadosUseCase.crearEstado("ASIGNADO");
-            gestionEstadosUseCase.crearEstado("CANCELADO");
-            gestionEstadosUseCase.crearEstado("BLOQUEADO");
+            gestionEstadosUseCase.crearEstado(new EstadoRequest("PENDIENTE"));
+            gestionEstadosUseCase.crearEstado(new EstadoRequest("FINALIZADO"));
+            gestionEstadosUseCase.crearEstado(new EstadoRequest("ASIGNADO"));
+            gestionEstadosUseCase.crearEstado(new EstadoRequest("CANCELADO"));
+            gestionEstadosUseCase.crearEstado(new EstadoRequest("BLOQUEADO"));
             System.out.println("Estados creados");
         }
     }
