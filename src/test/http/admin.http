@@ -47,7 +47,7 @@ Authorization: Bearer
 ###Crear Institucion
 POST http://localhost:8080/v1/admin/create-institution
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlc2NhZXNAZ21haWwuY29tIiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE3NTcxMDIxNDAsImV4cCI6MTc1NzE4ODU0MH0.uUtFRJrzdDejzOEEW3yduxkayzSAP65qbhW9Ugp7Y_U
+Authorization: Bearer 
 
 {
   "nombre": "institucion prueba",
