@@ -2,18 +2,18 @@ package com.escaes.jobsy.application.usecase.institucion;
 
 import com.escaes.jobsy.domain.model.Institucion;
 import com.escaes.jobsy.domain.repository.InstitucionRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ListarInstitucionesUseCase {
 
     private final InstitucionRepository institucionRepository;
-
-    public ListarInstitucionesUseCase(InstitucionRepository institucionRepository) {
-        this.institucionRepository = institucionRepository;
-    }
 
     public List<Institucion> listarInstituciones(){
         return institucionRepository.findAll();

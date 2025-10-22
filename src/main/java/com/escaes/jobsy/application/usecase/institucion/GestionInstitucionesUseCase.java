@@ -4,20 +4,18 @@ import com.escaes.jobsy.application.dto.institucion.InstitucionRequest;
 import com.escaes.jobsy.application.service.UbicacionService;
 import com.escaes.jobsy.domain.model.Institucion;
 import com.escaes.jobsy.domain.repository.InstitucionRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 @Service
+@RequiredArgsConstructor
 public class GestionInstitucionesUseCase {
 
     private final InstitucionRepository institucionRepository;
     private final UbicacionService ubicacionService;
-
-    public GestionInstitucionesUseCase(InstitucionRepository institucionRepository,
-                                       UbicacionService ubicacionService) {
-        this.institucionRepository = institucionRepository;
-        this.ubicacionService = ubicacionService;
-    }
 
     // ------------------- Método helper -------------------
     private String[] validarYObtenerNombres(InstitucionRequest request) {

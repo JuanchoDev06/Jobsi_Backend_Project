@@ -2,18 +2,19 @@ package com.escaes.jobsy.application.usecase.rol;
 
 import com.escaes.jobsy.domain.model.Rol;
 import com.escaes.jobsy.domain.repository.RolRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class GestionRolesUseCase {
 
     private final RolRepository rolRepository;
 
-    public GestionRolesUseCase(RolRepository rolRepository) {
-        this.rolRepository = rolRepository;
-    }
 
     public void crearRol(Rol rol) {
         if (rol.nombre() == null || rol.nombre().isBlank()) {

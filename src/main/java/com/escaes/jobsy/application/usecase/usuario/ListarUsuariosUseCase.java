@@ -2,22 +2,23 @@ package com.escaes.jobsy.application.usecase.usuario;
 
 import com.escaes.jobsy.domain.model.Usuario;
 import com.escaes.jobsy.domain.repository.UsuarioRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
+@RequiredArgsConstructor
 public class ListarUsuariosUseCase {
+    
     private final UsuarioRepository usuarioRepository;
 
-
-    public ListarUsuariosUseCase(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
-        /*
-        * Obtiene todos los usuarios registrados en el sistema
-        * de acuerdo a la condición.
-        * @return conteo de usuarios.
-        */
+    /*
+    * Obtiene todos los usuarios registrados en el sistema
+    * de acuerdo a la condición.
+    * @return conteo de usuarios.
+    */
     public int contarUsuarios() {
         return usuarioRepository.findAll().size();
     }

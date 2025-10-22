@@ -2,16 +2,16 @@ package com.escaes.jobsy.application.usecase.categoria;
 
 import com.escaes.jobsy.domain.model.Categoria;
 import com.escaes.jobsy.domain.repository.CategoriaRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class GestionCategoriasUseCase {
 
     private final CategoriaRepository categoriaRepository;
-
-    public GestionCategoriasUseCase(CategoriaRepository categoriaRepository){
-        this.categoriaRepository = categoriaRepository;
-    }
 
     public Categoria buscarCategoriaPorNombre(String nombre) {
         if (nombre == null) {

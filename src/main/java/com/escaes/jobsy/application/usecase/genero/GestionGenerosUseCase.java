@@ -3,16 +3,16 @@ package com.escaes.jobsy.application.usecase.genero;
 import com.escaes.jobsy.application.dto.genero.GeneroRequest;
 import com.escaes.jobsy.domain.model.Genero;
 import com.escaes.jobsy.domain.repository.GeneroRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class GestionGenerosUseCase {
 
     private final GeneroRepository generoRepository;
-
-    public GestionGenerosUseCase(GeneroRepository generoRepository) {
-        this.generoRepository = generoRepository;
-    }
 
     public void crearGenero(GeneroRequest request) {
 

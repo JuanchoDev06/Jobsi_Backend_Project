@@ -3,16 +3,16 @@ package com.escaes.jobsy.application.usecase.estado;
 import com.escaes.jobsy.application.dto.estado.EstadoRequest;
 import com.escaes.jobsy.domain.model.Estado;
 import com.escaes.jobsy.domain.repository.EstadoRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class GestionEstadosUseCase {
 
     private final EstadoRepository estadoRepository;
-
-    public GestionEstadosUseCase(EstadoRepository estadoRepository) {
-        this.estadoRepository = estadoRepository;
-    }
 
     public void crearEstado(EstadoRequest request){
         if (request.nombre() == null){
