@@ -3,7 +3,7 @@ package com.escaes.jobsy.infraestructure.rest.controller;
 import com.escaes.jobsy.application.dto.auth.JwtResponse;
 import com.escaes.jobsy.application.dto.auth.LoginRequest;
 import com.escaes.jobsy.config.jwt.JwtProvider;
-import com.escaes.jobsy.domain.repository.AuthService;
+//import com.escaes.jobsy.domain.repository.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name="Autenticación", description="Operaciones de autenticación y autorización")
 public class AuthController {
 
-    private final AuthService authService;
+    //private final AuthService authService;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtUtil;
 
