@@ -6,7 +6,7 @@ import com.escaes.jobsy.application.dto.usuario.UsuarioResponse;
 import com.escaes.jobsy.application.usecase.genero.GestionGenerosUseCase;
 import com.escaes.jobsy.application.usecase.rol.GestionRolesUseCase;
 import com.escaes.jobsy.application.usecase.usuario.GestionUsuariosUseCase;
-import com.escaes.jobsy.application.usecase.usuario.ListarUsuariosUseCase;
+//import com.escaes.jobsy.application.usecase.usuario.ListarUsuariosUseCase;
 import com.escaes.jobsy.domain.model.Genero;
 import com.escaes.jobsy.domain.model.Rol;
 import com.escaes.jobsy.domain.model.Usuario;
@@ -29,7 +29,7 @@ public class UsuarioController {
 
     private final GestionGenerosUseCase gestionGenerosUseCase;
 
-    private final ListarUsuariosUseCase listarUsuariosUseCase;
+    //private final ListarUsuariosUseCase listarUsuariosUseCase;
 
     private final GestionRolesUseCase gestionRolesUseCase;
 
