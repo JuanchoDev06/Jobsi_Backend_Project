@@ -16,7 +16,7 @@ import java.util.UUID;
 public class TrabajoEntity {
 
     @Id
-    @Column(columnDefinition = "CHAR(36)")
+    @Column(columnDefinition = "RAW(16)")
     private UUID id;
 
     @Column(name="Descripcion", nullable = false)

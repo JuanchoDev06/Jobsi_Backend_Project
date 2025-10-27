@@ -11,6 +11,7 @@ public interface RolRepository {
     Optional<Rol> findByNombre(String nombre);
     List<Rol>findAll();
     void save(Rol rol);
+    void saveAndFlush(Rol rol);
     void deleteById(UUID id);
     void deleteByNombre(String nombre);
     void delete(Rol rol);
