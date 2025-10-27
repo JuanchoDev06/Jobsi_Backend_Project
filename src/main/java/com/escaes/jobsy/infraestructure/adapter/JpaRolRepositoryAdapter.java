@@ -53,4 +53,10 @@ public class JpaRolRepositoryAdapter implements RolRepository {
     public void delete(Rol rol) {
 
     }
+
+    @Override
+    public void saveAndFlush(Rol rol) {
+        RolEntity entity= RolMapper.toEntity(rol);
+        springDataRolRepository.saveAndFlush(entity);
+    }
 }

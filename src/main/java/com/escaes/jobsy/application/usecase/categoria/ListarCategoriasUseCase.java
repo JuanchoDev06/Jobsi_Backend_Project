@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ListarCategoriasUseCase {
 
-    private CategoriaRepository categoriaRepository;
+    private final CategoriaRepository categoriaRepository;
 
     public List<Categoria> listarCategorias(){
         return categoriaRepository.findAll();
