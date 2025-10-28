@@ -7,7 +7,7 @@ import com.escaes.jobsy.application.usecase.genero.GestionGenerosUseCase;
 import com.escaes.jobsy.application.usecase.rol.GestionRolesUseCase;
 import com.escaes.jobsy.application.usecase.usuario.GestionUsuariosUseCase;
 //import com.escaes.jobsy.application.usecase.usuario.ListarUsuariosUseCase;
-import com.escaes.jobsy.domain.model.Genero;
+import com.escaes.jobsy.domain.model.Sexo;
 import com.escaes.jobsy.domain.model.Rol;
 import com.escaes.jobsy.domain.model.Usuario;
 import com.escaes.jobsy.infraestructure.mapper.UsuarioMapper;
@@ -37,7 +37,7 @@ public class UsuarioController {
     @PostMapping("/public/users/create")
     public ResponseEntity<UsuarioResponse>crearUsuario(@RequestBody UsuarioRequest request) {
 
-        Genero genero= gestionGenerosUseCase.obtenerGeneroPorNombre(request.genero());
+        Sexo genero= gestionGenerosUseCase.obtenerGeneroPorNombre(request.genero());
 
         Rol rol = gestionRolesUseCase.obtenerRolPorNombre(
                 request.rol() != null ? request.rol() : "USER"

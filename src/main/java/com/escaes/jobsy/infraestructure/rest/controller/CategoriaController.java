@@ -5,7 +5,6 @@ import com.escaes.jobsy.application.dto.categoria.CatergoriaResponse;
 import com.escaes.jobsy.application.usecase.categoria.GestionCategoriasUseCase;
 import com.escaes.jobsy.application.usecase.categoria.ListarCategoriasUseCase;
 import com.escaes.jobsy.domain.model.Categoria;
-import com.escaes.jobsy.infraestructure.mapper.CategoriaMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

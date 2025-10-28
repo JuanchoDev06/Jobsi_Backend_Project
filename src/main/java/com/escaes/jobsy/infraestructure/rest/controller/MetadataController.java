@@ -8,9 +8,8 @@ import com.escaes.jobsy.application.usecase.categoria.ListarCategoriasUseCase;
 import com.escaes.jobsy.application.usecase.estado.ListarEstadosUseCase;
 import com.escaes.jobsy.application.usecase.genero.ListarGenerosUseCase;
 import com.escaes.jobsy.application.usecase.pago.ListarPagosUseCase;
-import com.escaes.jobsy.infraestructure.mapper.CategoriaMapper;
 import com.escaes.jobsy.infraestructure.mapper.EstadoMapper;
-import com.escaes.jobsy.infraestructure.mapper.GeneroMapper;
+import com.escaes.jobsy.infraestructure.mapper.SexoMapper;
 import com.escaes.jobsy.infraestructure.mapper.PagoMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +50,7 @@ public class MetadataController {
     @GetMapping("/lookups/gender-all")
     public ResponseEntity<List<GeneroResponse>> getAllGenerosMetaData(){
         return ResponseEntity.ok(listarGenerosUseCase.listarGeneros()
-                .stream().map(GeneroMapper::entityToResponse).toList());
+                .stream().map(SexoMapper::entityToResponse).toList());
     }
 
     @GetMapping("/lookups/payment-all")

@@ -1,6 +1,6 @@
 package com.escaes.jobsy.domain.repository;
 
-import com.escaes.jobsy.domain.model.Pago;
+import com.escaes.jobsy.domain.model.TipoPago;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,11 +8,11 @@ import java.util.UUID;
 
 public interface PagoRepository {
 
-    Optional<Pago> findById(UUID id);
-    Optional<Pago> findByNombre(String nombrePago);
+    Optional<TipoPago> findById(UUID id);
+    Optional<TipoPago> findByNombre(String nombrePago);
 
-    void save(Pago pago);
-    void delete(Pago pago);
+    void save(TipoPago pago);
+    void delete(TipoPago pago);
 
-    List<Pago> findAll();
+    List<TipoPago> findAll();
 }

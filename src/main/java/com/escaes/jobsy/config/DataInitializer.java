@@ -19,7 +19,7 @@ import com.escaes.jobsy.application.usecase.usuario.GestionUsuariosUseCase;
 import com.escaes.jobsy.application.usecase.usuario.ListarUsuariosUseCase;
 
 
-import com.escaes.jobsy.domain.model.Genero;
+import com.escaes.jobsy.domain.model.Sexo;
 import com.escaes.jobsy.domain.model.Rol;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -111,7 +111,7 @@ public class DataInitializer implements CommandLineRunner {
     }
     private void initializeAdmin(){
         if(listarUsuariosUseCase.contarUsuarios()==0){
-            Genero genero= gestionGenerosUseCase.obtenerGeneroPorNombre("Alien");
+            Sexo genero= gestionGenerosUseCase.obtenerGeneroPorNombre("Alien");
             Rol rol= gestionRolesUseCase.obtenerRolPorNombre("ADMIN");
             UsuarioRequest admin= new UsuarioRequest(1107834660,
                     "escaes","escaes@gmail.com","123",new Date(), "","");

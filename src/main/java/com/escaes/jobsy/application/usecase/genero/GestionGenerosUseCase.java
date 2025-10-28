@@ -1,7 +1,7 @@
 package com.escaes.jobsy.application.usecase.genero;
 
 import com.escaes.jobsy.application.dto.genero.GeneroRequest;
-import com.escaes.jobsy.domain.model.Genero;
+import com.escaes.jobsy.domain.model.Sexo;
 import com.escaes.jobsy.domain.repository.GeneroRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,17 +22,17 @@ public class GestionGenerosUseCase {
         if (generoRepository.findByNombre(request.nombre()).isPresent()) {
             throw new IllegalArgumentException("Ya existe un género con el nombre proporcionado");
         }
-        Genero genero= new Genero(
+        Sexo genero= new Sexo(
                 null, request.nombre()
         );
         generoRepository.save(genero);
     }
-    public Genero obtenerGeneroPorId(Long id) {
+    public Sexo obtenerGeneroPorId(Long id) {
         return generoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Género no encontrado con el ID proporcionado"));
     }
 
-    public Genero obtenerGeneroPorNombre(String nombre) {
+    public Sexo obtenerGeneroPorNombre(String nombre) {
         return generoRepository.findByNombre(nombre)
                 .orElseThrow(() -> new IllegalArgumentException("Género no encontrado con el nombre proporcionado"));
     }

@@ -1,9 +1,6 @@
 package com.escaes.jobsy.infraestructure.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.UUID;
@@ -13,16 +10,17 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name="TBL_ROLES")
+@Table(name="ROLES")
 public class RolEntity {
 
     @Id
-    @Column(name = "Rol_UUID", columnDefinition = "CHAR(36)")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ROL_ID")
+    private Long id;
 
-    @Column(name = "Nombre", nullable = false)
-    private String nombre;
+    @Column(name = "NOMBRE_ROL", nullable = false, unique = true, length = 50)
+    private String nombreRol;
 
-    @Column(name="Descripcion", nullable = true)
-    private String descripcion;
+    @Column(name="DESCRIPCION_ROL", length = 255)
+    private String descripcionRol;
 }

@@ -1,7 +1,5 @@
 package com.escaes.jobsy.domain.repository;
 
-import com.escaes.jobsy.domain.model.Institucion;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

@@ -1,6 +1,6 @@
 package com.escaes.jobsy.application.usecase.genero;
 
-import com.escaes.jobsy.domain.model.Genero;
+import com.escaes.jobsy.domain.model.Sexo;
 import com.escaes.jobsy.domain.repository.GeneroRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class ListarGenerosUseCase {
         return generoRepository.findAll().size();
     }
 
-    public List<Genero> listarGeneros() {
+    public List<Sexo> listarGeneros() {
         return generoRepository.findAll();
     }
 

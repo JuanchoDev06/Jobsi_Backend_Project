@@ -4,7 +4,7 @@ import com.escaes.jobsy.application.dto.genero.GeneroRequest;
 import com.escaes.jobsy.application.dto.genero.GeneroResponse;
 import com.escaes.jobsy.application.usecase.genero.GestionGenerosUseCase;
 //import com.escaes.jobsy.application.usecase.genero.ListarGenerosUseCase;
-import com.escaes.jobsy.infraestructure.mapper.GeneroMapper;
+import com.escaes.jobsy.infraestructure.mapper.SexoMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +27,6 @@ public class GeneroController {
     public ResponseEntity<GeneroResponse> crearGenero(@RequestBody GeneroRequest request) {
         gestionGenerosUseCase.crearGenero(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(GeneroMapper.requestToResponse(request));
+                .body(SexoMapper.requestToResponse(request));
     }
 }

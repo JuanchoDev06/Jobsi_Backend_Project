@@ -34,7 +34,7 @@ public class GestionTrabajosUseCase {
         Estado estado= estadoRepository.findByNombre("PENDIENTE")
                 .orElseThrow(()-> new IllegalArgumentException("Estado no encontrado"));
 
-        Pago tipoPago= pagoRepository.findByNombre(request.tipoPago())
+        TipoPago tipoPago= pagoRepository.findByNombre(request.tipoPago())
                 .orElseThrow(()->new IllegalArgumentException("Tipo de pago no encontrado"));
 
         Trabajo trabajo= new Trabajo(

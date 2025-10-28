@@ -1,11 +1,22 @@
 package com.escaes.jobsy.domain.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-public record Usuario(UUID id,String nombre ,Integer documento, String correo,
-                      String clave, Boolean bloqueado,
-                      Date fechaNacimiento,
-                      Genero genero,Rol rol, List<Trabajo> trabajos, List<Trabajo>trabajosRealizados) {
-}
+public record Usuario(
+        Long id,
+        String nombre,
+        String documento,
+        String correo,
+        String clave,
+        String celular,
+        LocalDate fechaNacimiento,
+        Sexo sexo,
+        Rol rol,
+        List<Trabajo> trabajosPublicados,
+        List<Trabajo> trabajosAsignados,
+        Float calificacionPromedio,
+        Integer calificacionConteo,
+        Boolean bloqueado
+) {}

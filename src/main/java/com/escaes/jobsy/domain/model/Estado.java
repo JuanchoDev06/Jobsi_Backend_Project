@@ -1,4 +1,4 @@
 package com.escaes.jobsy.domain.model;
 
-public record Estado(Long id, String nombre) {
+public record Estado(Long id, String nombreEstado, String descripcionEstado) {
 }

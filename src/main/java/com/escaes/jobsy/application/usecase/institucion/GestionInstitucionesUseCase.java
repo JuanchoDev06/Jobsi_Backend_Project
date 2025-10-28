@@ -2,7 +2,6 @@ package com.escaes.jobsy.application.usecase.institucion;
 
 import com.escaes.jobsy.application.dto.institucion.InstitucionRequest;
 import com.escaes.jobsy.application.service.UbicacionService;
-import com.escaes.jobsy.domain.model.Institucion;
 import com.escaes.jobsy.domain.repository.InstitucionRepository;
 
 import lombok.RequiredArgsConstructor;

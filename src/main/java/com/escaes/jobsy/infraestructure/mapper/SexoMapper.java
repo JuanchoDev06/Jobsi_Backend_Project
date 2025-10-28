@@ -2,20 +2,21 @@ package com.escaes.jobsy.infraestructure.mapper;
 
 import com.escaes.jobsy.application.dto.genero.GeneroRequest;
 import com.escaes.jobsy.application.dto.genero.GeneroResponse;
-import com.escaes.jobsy.domain.model.Genero;
+import com.escaes.jobsy.domain.model.Sexo;
 import com.escaes.jobsy.infraestructure.entity.GeneroEntity;
+import com.escaes.jobsy.infraestructure.entity.SexoEntity;
 
-public class GeneroMapper {
+public class SexoMapper {
 
-    public static Genero toDomain(GeneroEntity generoEntity){
+    public static Sexo toDomain(SexoEntity generoEntity){
 
         if(generoEntity == null){
             return null;
         }
-        return new Genero(generoEntity.getId(), generoEntity.getNombreGenero());
+        return new Sexo(SexoEntity.getId(), generoEntity.getNombreSexo());
     }
 
-    public static  GeneroEntity toEntity(Genero domain){
+    public static  GeneroEntity toEntity(Sexo domain){
         if(domain==null){
             return null;
         }
@@ -25,7 +26,7 @@ public class GeneroMapper {
                 .nombreGenero(domain.nombreGenero())
                 .build();
     }
-    public static GeneroResponse entityToResponse(Genero genero){
+    public static GeneroResponse entityToResponse(Sexo genero){
         if(genero==null){
             return null;
         }

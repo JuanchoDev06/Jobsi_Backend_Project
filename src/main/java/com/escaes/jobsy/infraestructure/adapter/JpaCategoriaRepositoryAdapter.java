@@ -3,7 +3,6 @@ package com.escaes.jobsy.infraestructure.adapter;
 import com.escaes.jobsy.domain.model.Categoria;
 import com.escaes.jobsy.domain.repository.CategoriaRepository;
 import com.escaes.jobsy.infraestructure.jpa.SpringDataCategoriaRepository;
-import com.escaes.jobsy.infraestructure.mapper.CategoriaMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

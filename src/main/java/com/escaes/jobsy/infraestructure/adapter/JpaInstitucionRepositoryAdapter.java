@@ -1,9 +1,7 @@
 package com.escaes.jobsy.infraestructure.adapter;
 
-import com.escaes.jobsy.domain.model.Institucion;
 import com.escaes.jobsy.domain.repository.InstitucionRepository;
 import com.escaes.jobsy.infraestructure.jpa.SpringDataInstitucionRepository;
-import com.escaes.jobsy.infraestructure.mapper.InstitucionMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

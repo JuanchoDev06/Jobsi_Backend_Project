@@ -8,8 +8,6 @@ import com.escaes.jobsy.application.dto.institucion.ubicacion.Municipio;
 import com.escaes.jobsy.application.service.UbicacionService;
 import com.escaes.jobsy.application.usecase.institucion.GestionInstitucionesUseCase;
 import com.escaes.jobsy.application.usecase.institucion.ListarInstitucionesUseCase;
-import com.escaes.jobsy.domain.model.Institucion;
-import com.escaes.jobsy.infraestructure.mapper.InstitucionMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

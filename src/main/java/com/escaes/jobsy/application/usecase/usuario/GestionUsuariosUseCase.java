@@ -1,7 +1,7 @@
 package com.escaes.jobsy.application.usecase.usuario;
 
 import com.escaes.jobsy.application.dto.usuario.UsuarioRequest;
-import com.escaes.jobsy.domain.model.Genero;
+import com.escaes.jobsy.domain.model.Sexo;
 import com.escaes.jobsy.domain.model.Rol;
 import com.escaes.jobsy.domain.model.Usuario;
 import com.escaes.jobsy.domain.repository.UsuarioRepository;
@@ -22,7 +22,7 @@ public class GestionUsuariosUseCase {
     private final PasswordEncoder passwordEncoder;
 
 
-    public void crearUsuario(UsuarioRequest request, Genero genero, Rol rol) {
+    public void crearUsuario(UsuarioRequest request, Sexo genero, Rol rol) {
 
         if (request == null) {
             throw new IllegalArgumentException("El usuario no puede ser nulo");

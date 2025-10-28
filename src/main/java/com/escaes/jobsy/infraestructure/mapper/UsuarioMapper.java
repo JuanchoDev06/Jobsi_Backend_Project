@@ -25,7 +25,7 @@ public class UsuarioMapper {
                 usuarioEntity.getClave(),
                 usuarioEntity.getBloqueado(),
                 usuarioEntity.getFechaNacimiento(),
-                usuarioEntity.getGenero() != null ? GeneroMapper.toDomain(usuarioEntity.getGenero()) : null,
+                usuarioEntity.getGenero() != null ? SexoMapper.toDomain(usuarioEntity.getGenero()) : null,
                 usuarioEntity.getRol() != null ? RolMapper.toDomain(usuarioEntity.getRol()) : null,
                 usuarioEntity.getTrabajosSolicitados() != null ? usuarioEntity.getTrabajosSolicitados().stream().map(TrabajoMapper::toDomain).collect(Collectors.toList()) : List.of(),
                 usuarioEntity.getTrabajosRealizados() != null ? usuarioEntity.getTrabajosRealizados().stream().map(TrabajoMapper::toDomain).collect(Collectors.toList()) : List.of()
@@ -43,7 +43,7 @@ public class UsuarioMapper {
                 usuarioEntity.getClave(),
                 usuarioEntity.getBloqueado(),
                 usuarioEntity.getFechaNacimiento(),
-                usuarioEntity.getGenero() != null ? GeneroMapper.toDomain(usuarioEntity.getGenero()) : null,
+                usuarioEntity.getGenero() != null ? SexoMapper.toDomain(usuarioEntity.getGenero()) : null,
                 usuarioEntity.getRol() != null ? RolMapper.toDomain(usuarioEntity.getRol()) : null,
                 List.of(),
                 List.of()
@@ -59,7 +59,7 @@ public class UsuarioMapper {
                 .clave(usuario.clave())
                 .bloqueado(usuario.bloqueado())
                 .fechaNacimiento(usuario.fechaNacimiento())
-                .genero(usuario.genero() != null ? GeneroMapper.toEntity(usuario.genero()) : null)
+                .genero(usuario.genero() != null ? SexoMapper.toEntity(usuario.genero()) : null)
                 .rol(usuario.rol() != null ? RolMapper.toEntity(usuario.rol()) : null)
                 .trabajosSolicitados(usuario.trabajos().stream().map(TrabajoMapper::toEntity).collect(Collectors.toList()))
                 .trabajosRealizados(usuario.trabajosRealizados().stream().map(TrabajoMapper::toEntity).collect(Collectors.toList()))
