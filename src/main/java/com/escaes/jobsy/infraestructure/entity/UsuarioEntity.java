@@ -18,7 +18,7 @@ import java.util.UUID;
 public class UsuarioEntity {
 
     @Id
-    @Column(name="Usuario_UUID",columnDefinition = "CHAR(36)")
+    @Column(name="Usuario_UUID",columnDefinition = "RAW(16)")
     private UUID id;
 
     @Column(name="Nombre", nullable = false)

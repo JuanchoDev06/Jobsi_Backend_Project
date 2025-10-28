@@ -16,7 +16,7 @@ import java.util.UUID;
 @Builder
 public class InstitucionEntity {
     @Id
-    @Column(name = "Institucion_UUID",columnDefinition = "CHAR(36)")
+    @Column(name = "Institucion_UUID",columnDefinition = "RAW(16)")
     private UUID id;
 
     @Column(name = "Nombre_institucion",nullable = false)
