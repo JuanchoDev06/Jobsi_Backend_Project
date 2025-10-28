@@ -51,7 +51,9 @@ public class JpaGeneroRepositoryAdapter implements GeneroRepository {
 
     @Override
     public List<Genero> findAll() {
-        return List.of();
+        return springDataGeneroRepository.findAll().stream()
+                .map(GeneroMapper::toDomain)
+                .toList();
     }
 
     @Override
