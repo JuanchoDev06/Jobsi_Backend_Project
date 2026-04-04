@@ -54,6 +54,7 @@ public class SecurityConfig {
                         .requestMatchers("/v1/jobs/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/v1/gender/**").hasRole("ADMIN")
+                        .requestMatchers("/v1/ubication/**").hasRole("ADMIN")
                         .requestMatchers("/v1/lookups/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/internal/**").permitAll()
                         .anyRequest().authenticated()

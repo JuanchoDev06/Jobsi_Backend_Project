@@ -21,7 +21,7 @@ public class TrabajoMapper {
                 trabajoEntity.getDescripcion(),
                 trabajoEntity.getFechaPublicacion(),
                 trabajoEntity.getPago(),
-                trabajoEntity.getUbicacion(),
+                UbicacionMapper.toDomain(trabajoEntity.getUbicacion()),
                 trabajoEntity.getSolicitante() != null ? UsuarioMapper.toDomainBasic(trabajoEntity.getSolicitante())
                         : null,
                 trabajoEntity.getTrabajador() != null ? UsuarioMapper.toDomainBasic(trabajoEntity.getTrabajador())
@@ -43,7 +43,7 @@ public class TrabajoMapper {
                 trabajo.descripcion(),
                 trabajo.fechaPublicacion(),
                 trabajo.pago(),
-                trabajo.ubicacion(),
+                UbicacionMapper.toEntity(trabajo.ubicacion()),
                 trabajo.solicitante() != null ? UsuarioMapper.toEntity(trabajo.solicitante()) : null,
                 trabajo.trabajador() != null ? UsuarioMapper.toEntity(trabajo.trabajador()) : null,
                 EstadoMapper.toEntity(trabajo.estado()),
@@ -63,7 +63,7 @@ public class TrabajoMapper {
                 trabajo.descripcion(),
                 trabajo.pago(),
                 trabajo.tipoPago() != null ? trabajo.tipoPago().nombrePago() : null,
-                trabajo.ubicacion(),
+                trabajo.ubicacion() != null ? trabajo.ubicacion().nombre().toUpperCase() : null,
                 trabajo.estado() != null ? trabajo.estado().nombre() : null,
                 trabajo.categoria() != null ? trabajo.categoria().nombre() : null,
                 trabajo.solicitante() != null ? trabajo.solicitante().correo() : null,

@@ -6,9 +6,9 @@ import java.util.Date;
 import java.util.UUID;
 
 public record Trabajo(UUID id, String titulo, String descripcion, Date fechaPublicacion,
-                      Double pago, String ubicacion, Usuario solicitante,
+                      Double pago, Ubicacion ubicacion, Usuario solicitante,
                       Usuario trabajador, Categoria categoria, Estado estado, Pago tipoPago) {
-    public static Trabajo crear(CrearTrabajoRequest request, Usuario solicitante, Usuario trabajador,
+    public static Trabajo crear(CrearTrabajoRequest request, Usuario solicitante,Ubicacion ubicacion, Usuario trabajador,
                                 Categoria categoria, Estado estado, Pago tipoPago) {
         return new Trabajo(
                 UUID.randomUUID(),
@@ -16,7 +16,7 @@ public record Trabajo(UUID id, String titulo, String descripcion, Date fechaPubl
                 request.descripcion(),
                 new Date(),
                 request.pago(),
-                request.ubicacion(),
+                ubicacion,
                 solicitante,
                 trabajador,
                 categoria,

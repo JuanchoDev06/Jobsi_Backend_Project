@@ -27,6 +27,8 @@ public class GestionTrabajosUseCase {
 
     private final PagoRepository pagoRepository;
 
+    private final UbicacionRepository ubicacionRepository;
+
     /*
      * Eventualmente, delimitar cuantos trabajos activos puede crear un usuario
      * */
@@ -63,7 +65,9 @@ public class GestionTrabajosUseCase {
         Pago tipoPago = pagoRepository.findByNombre(request.tipoPago())
                 .orElseThrow(() -> new BusinessExceptions.NotFoundException("Tipo de pago no encontrado"));
 
-        Trabajo trabajo = Trabajo.crear(request, userSolcitante, null, categoria, estado, tipoPago);
+        Ubicacion ubicacion=  ubicacionRepository.findByNombre(request.ubicacion());
+
+        Trabajo trabajo = Trabajo.crear(request, userSolcitante,ubicacion, null, categoria, estado, tipoPago);
 
         trabajoRepository.save(trabajo);
 
