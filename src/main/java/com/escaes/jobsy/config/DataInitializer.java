@@ -3,6 +3,7 @@ package com.escaes.jobsy.config;
 import com.escaes.jobsy.application.dto.estado.EstadoRequest;
 import com.escaes.jobsy.application.dto.genero.GeneroRequest;
 import com.escaes.jobsy.application.dto.pago.PagoRequest;
+import com.escaes.jobsy.application.dto.ubicacion.UbicacionRequest;
 import com.escaes.jobsy.application.dto.usuario.UsuarioRequest;
 import com.escaes.jobsy.application.usecase.categoria.GestionCategoriasUseCase;
 import com.escaes.jobsy.application.usecase.categoria.ListarCategoriasUseCase;
@@ -15,6 +16,8 @@ import com.escaes.jobsy.application.usecase.pago.GestionPagosUseCase;
 import com.escaes.jobsy.application.usecase.pago.ListarPagosUseCase;
 import com.escaes.jobsy.application.usecase.rol.GestionRolesUseCase;
 import com.escaes.jobsy.application.usecase.rol.ListarRolesUseCase;
+import com.escaes.jobsy.application.usecase.ubicacion.GestionUbicacionUseCase;
+import com.escaes.jobsy.application.usecase.ubicacion.ListarUbicacionUseCase;
 import com.escaes.jobsy.application.usecase.usuario.GestionUsuariosUseCase;
 import com.escaes.jobsy.application.usecase.usuario.ListarUsuariosUseCase;
 
@@ -59,6 +62,10 @@ public class DataInitializer implements CommandLineRunner {
 
     private final GestionPagosUseCase gestionPagosUseCase;
 
+    private final GestionUbicacionUseCase gestionUbicacionUseCase;
+
+    private final ListarUbicacionUseCase listarUbicacionUseCase;
+
     private static final Logger logger = Logger.getLogger(DataInitializer.class.getName());
 
     @Override
@@ -70,6 +77,7 @@ public class DataInitializer implements CommandLineRunner {
         initializeEstados();
         initializeCategorias();
         initializeTipoPagos();
+        initializeUbicaciones();
         logger.info("Inicialización de datos completada.");
     }
 
@@ -140,6 +148,18 @@ public class DataInitializer implements CommandLineRunner {
             gestionPagosUseCase.crearTipoPago(new PagoRequest("INTERCAMBIO"));
             gestionPagosUseCase.crearTipoPago(new PagoRequest("OTRO"));
             logger.info("Tipos de pago creados");
+        }
+    }
+
+    public void initializeUbicaciones(){
+        if(listarUbicacionUseCase.count()==0L){
+            logger.info("Inicializando ubicación por defecto...");
+            gestionUbicacionUseCase.crear(new UbicacionRequest("Palmas"));
+            gestionUbicacionUseCase.crear(new UbicacionRequest("Almendros"));
+            gestionUbicacionUseCase.crear(new UbicacionRequest("Terraza"));
+            gestionUbicacionUseCase.crear(new UbicacionRequest("P40"));
+            gestionUbicacionUseCase.crear(new UbicacionRequest("p13"));
+            logger.info("Ubicaciones creadas Exitosamente");
         }
     }
 }

@@ -44,6 +44,26 @@ Authorization: Bearer
     "nombre": "Categoria Prueba"
 }
 
+###Crear ubicacion
+POST http://localhost:8080/v1/ubication
+Content-Type: application/json
+Authorization: Bearer
+
+{
+  "nombre": "Biblioteca"
+}
+
+###Obtener todas las ubicaciones registradas
+GET http://localhost:8080/v1/ubication
+Accept: application/json
+Authorization: Bearer
+
+
+### Eliminar una ubicacaion por nombre
+DELETE http://localhost:8080/v1/ubication/Biblioteca
+Authorization: Bearer
+
+
 ###Crear Institucion
 POST http://localhost:8080/v1/admin/create-institution
 Content-Type: application/json

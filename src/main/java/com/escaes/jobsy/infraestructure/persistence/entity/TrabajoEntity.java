@@ -35,8 +35,9 @@ public class TrabajoEntity {
     @Builder.Default
     private Double pago=0.0;
 
-    @Column(name = "Ubicacion_Trabajo", nullable = false, length = 200)
-    private String ubicacion;
+    @ManyToOne
+    @JoinColumn(name = "Ubicacion_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_TRABAJO_UBICACION"))
+    private UbicacionEntity ubicacion;
 
     @ManyToOne()
     @JoinColumn(name = "Solicitante_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_TRABAJO_SOLICITANTE"))

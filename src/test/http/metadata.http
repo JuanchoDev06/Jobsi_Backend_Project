@@ -22,3 +22,10 @@ Authorization: Bearer
 GET http://localhost:8080/v1/lookups/payment-all
 accept: application/json
 Authorization: Bearer
+
+
+###Todas las ubicaciones registradas
+GET http://localhost:8080/v1/lookups/ubication
+accept: application/json
+Authorization: Bearer
+
