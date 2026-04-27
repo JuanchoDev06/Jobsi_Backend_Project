@@ -6,6 +6,7 @@ import com.escaes.jobsy.domain.model.Usuario;
 import com.escaes.jobsy.domain.repository.SolicitudRepository;
 import com.escaes.jobsy.infraestructure.jpa.SpringDataSolicitudRepository;
 import com.escaes.jobsy.infraestructure.mapper.SolicitudMapper;
+import com.escaes.jobsy.infraestructure.persistence.enums.EstadoSolicitud;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -52,12 +53,18 @@ public class JpaSolicitudRepositoryAdapter implements SolicitudRepository {
 
     @Override
     public List<Solicitud> findByUsuario(Usuario usuario) {
-        return List.of();
+        return springDataSolicitudRepository.findByUsuario(usuario)
+                .stream()
+                .map(SolicitudMapper::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Solicitud> findByTrabajo(Trabajo trabajo) {
-        return List.of();
+        return springDataSolicitudRepository.findByTrabajo(trabajo)
+                .stream()
+                .map(SolicitudMapper::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -72,5 +79,15 @@ public class JpaSolicitudRepositoryAdapter implements SolicitudRepository {
     public Boolean existsByUsuarioCorreoAndTrabajoId(String correo, UUID trabajoId) {
         return springDataSolicitudRepository
                 .existsByUsuarioCorreoAndTrabajoId(correo, trabajoId);
+    }
+
+    @Override
+    public void actualizarEstado(UUID trabajoId, EstadoSolicitud estado) {
+        springDataSolicitudRepository.actualizarEstado(trabajoId, estado);
+    }
+
+    @Override
+    public void rechazarOtrasSolicitudes(UUID trabajoId, UUID solicitudId) {
+        springDataSolicitudRepository.rechazarOtrasSolicitudes(trabajoId, solicitudId);
     }
 }

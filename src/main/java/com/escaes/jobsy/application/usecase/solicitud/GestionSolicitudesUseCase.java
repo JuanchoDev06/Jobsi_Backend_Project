@@ -23,34 +23,35 @@ public class GestionSolicitudesUseCase {
 
     private final TrabajoRepository trabajoRepository;
 
-    private SolicitudValidada validateSolicitud (SolicitudRequest request) {
+    private SolicitudValidada validateSolicitud (SolicitudRequest request, String correo) {
 
         if (request.trabajo()==null) {
             throw new BusinessExceptions.BadRequestException("El Id del trabajo no puede ser nulo");
         }
-        if (request.trabajadorEmail().isBlank()) {
+        if (correo.isBlank()) {
             throw new BusinessExceptions.BadRequestException("El Email del trabajador no puede ser nulo");
         }
 
-        Usuario user = usuarioRepository.findByCorreo(request.trabajadorEmail())
+        Usuario user = usuarioRepository.findByCorreo(correo)
                 .orElseThrow(() -> new BusinessExceptions
-                        .NotFoundException("Usuario no encontrado con correo: " + request.trabajadorEmail()));
+                        .NotFoundException("Usuario no encontrado con correo: " + correo));
 
         Trabajo job = trabajoRepository.findById(request.trabajo()).orElseThrow(()->new  BusinessExceptions
                 .NotFoundException("Trabajo no encontrado"));
 
-        if (solicitudRepository.existsByUsuarioCorreoAndTrabajoId(request.trabajadorEmail(), request.trabajo())) {
+        if (solicitudRepository.existsByUsuarioCorreoAndTrabajoId(correo, request.trabajo())) {
             throw new BusinessExceptions.ConflictException("Ya Aplicaste al trabajo seleccionado");
         }
 
        return new SolicitudValidada(user,job);
     }
 
-    public void crearSolicitud(SolicitudRequest request) {
-        SolicitudValidada validated= validateSolicitud(request);
+    public Solicitud crearSolicitud(SolicitudRequest request, String correo) {
+        SolicitudValidada validated= validateSolicitud(request, correo);
 
         Solicitud solicitud = Solicitud.crear(validated.usuario(),validated.trabajo());
-
         solicitudRepository.save(solicitud);
+
+        return solicitud;
     }
 }

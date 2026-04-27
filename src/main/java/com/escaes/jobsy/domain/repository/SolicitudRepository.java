@@ -3,6 +3,7 @@ package com.escaes.jobsy.domain.repository;
 import com.escaes.jobsy.domain.model.Solicitud;
 import com.escaes.jobsy.domain.model.Trabajo;
 import com.escaes.jobsy.domain.model.Usuario;
+import com.escaes.jobsy.infraestructure.persistence.enums.EstadoSolicitud;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,10 @@ public interface SolicitudRepository {
     List<Solicitud>findSolicitudesConUsuario(UUID trabajoId);
 
     Boolean existsByUsuarioCorreoAndTrabajoId(String usuarioDocumento, UUID trabajoId);
+
+    void actualizarEstado(UUID trabajoId, EstadoSolicitud estado);
+
+    void rechazarOtrasSolicitudes (UUID trabajoId, UUID solicitudId);
 
 
 }

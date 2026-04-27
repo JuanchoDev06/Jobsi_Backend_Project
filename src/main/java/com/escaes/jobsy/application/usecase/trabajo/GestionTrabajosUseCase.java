@@ -3,16 +3,16 @@ package com.escaes.jobsy.application.usecase.trabajo;
 import com.escaes.jobsy.application.dto.trabajo.CrearTrabajoRequest;
 import com.escaes.jobsy.domain.model.*;
 import com.escaes.jobsy.domain.repository.*;
+import com.escaes.jobsy.infraestructure.persistence.enums.EstadoSolicitud;
 import com.escaes.jobsy.infraestructure.rest.exception.BusinessExceptions;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static java.util.stream.Collectors.toList;
+
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +29,8 @@ public class GestionTrabajosUseCase {
     private final PagoRepository pagoRepository;
 
     private final UbicacionRepository ubicacionRepository;
+
+    private final SolicitudRepository solicitudRepository;
 
     /*
      * Eventualmente, delimitar cuantos trabajos activos puede crear un usuario
@@ -84,37 +86,52 @@ public class GestionTrabajosUseCase {
      *Eventualmente, limitar que un usuario no pueda asignarse mas de X trabajos al mismo tiempo
      * */
     @Transactional
-    public Trabajo asignarTrabajo(UUID trabajoId, String trabajadorCorreo) {
+    public Trabajo asignarTrabajo(UUID trabajoId, UUID solicitudId) {
 
         Trabajo trabajo = trabajoRepository
                 .findById(trabajoId)
-                .orElseThrow(() -> new IllegalArgumentException("Trabajo no encontrado"));
+                .orElseThrow(() -> new BusinessExceptions.NotFoundException("Trabajo no encontrado"));
 
         if (!"PENDIENTE".equals(trabajo.estado().nombre())) {
-            throw new IllegalArgumentException("Trabajo no disponible para asignarse");
+            throw new BusinessExceptions.BadRequestException("Trabajo no disponible para asignarse");
         }
 
-        Usuario trabajador = usuarioRepository.findByCorreo(trabajadorCorreo)
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+        Solicitud solicitud = solicitudRepository.findById(solicitudId)
+                .orElseThrow(() -> new BusinessExceptions.NotFoundException("Solicitud no encontrada"));
 
-        if (trabajadorCorreo.equals(trabajo.solicitante().correo())) {
-            throw new IllegalArgumentException("No puedes asginarte tu propio trabajo :O ");
+        if (!solicitud.trabajo().id().equals(trabajoId)) {
+            throw new BusinessExceptions.BadRequestException("La solicitud no pertenece al trabajo");
         }
 
+        Usuario trabajador = solicitud.trabajador();
+
+        if (trabajador.correo().equals(trabajo.solicitante().correo())) {
+            throw new BusinessExceptions.BadRequestException("No puedes asignarte tu propio trabajo");
+        }
 
         Estado estadoAsignado = estadoRepository.findByNombre("ASIGNADO")
-                .orElseThrow(() -> new IllegalArgumentException("Estado 'ASIGNADO' no existe"));
+                .orElseThrow(() -> new BusinessExceptions.NotFoundException("Estado 'ASIGNADO' no existe"));
 
         Trabajo updated = new Trabajo(
-                trabajo.id(), trabajo.titulo(), trabajo.descripcion(), trabajo.fechaPublicacion(),
+                trabajo.id(),
+                trabajo.titulo(),
+                trabajo.descripcion(),
+                trabajo.fechaPublicacion(),
                 trabajo.pago(),
-                trabajo.ubicacion(), trabajo.solicitante(), trabajador, trabajo.categoria(),
+                trabajo.ubicacion(),
+                trabajo.solicitante(),
+                trabajador,
+                trabajo.categoria(),
                 estadoAsignado,
-                trabajo.tipoPago());
+                trabajo.tipoPago()
+        );
 
         trabajoRepository.save(updated);
 
-        return (updated);
+        solicitudRepository.actualizarEstado(solicitudId, EstadoSolicitud.ACEPTADA);
+        solicitudRepository.rechazarOtrasSolicitudes(trabajoId, solicitudId);
+
+        return updated;
     }
 
     public void eliminarTrabajoPorIdYUsuarioCorreoSolicitante(UUID id, String solicitanteCorreo) {

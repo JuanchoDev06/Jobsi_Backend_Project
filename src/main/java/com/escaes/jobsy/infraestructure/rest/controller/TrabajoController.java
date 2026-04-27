@@ -85,14 +85,14 @@ public class TrabajoController {
         return ResponseEntity.ok(responses);
     }
 
-    @PatchMapping("/jobs/take-job/{jobId}")
-    public ResponseEntity<TrabajoResponse> aplicarTrabajo(@PathVariable UUID jobId,Authentication auth){
+    @PatchMapping("/jobs/apply-job/{jobId}")
+    public ResponseEntity<TrabajoResponse> aplicarTrabajo(@PathVariable UUID jobId,UUID solicitudId,Authentication auth){
         String trabajadorCorreo= auth.getName();
 
         //Ejecutamos el caso de uso
-        Trabajo takedJob=gestionTrabajosUseCase.asignarTrabajo(jobId, trabajadorCorreo);
+        Trabajo appliedJob=gestionTrabajosUseCase.asignarTrabajo(jobId, solicitudId);
         LOG.info("Trabajo aplicado correo: " + trabajadorCorreo);
-        return ResponseEntity.ok(TrabajoMapper.entityToResponse(takedJob));
+        return ResponseEntity.ok(TrabajoMapper.entityToResponse(appliedJob));
     }
 
     @PatchMapping("/jobs/unassigned-job/{jobId}")
