@@ -4,6 +4,7 @@ import com.escaes.jobsy.application.dto.trabajo.CrearTrabajoRequest;
 import com.escaes.jobsy.domain.model.*;
 import com.escaes.jobsy.domain.repository.*;
 import com.escaes.jobsy.infraestructure.rest.exception.BusinessExceptions;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -82,6 +83,7 @@ public class GestionTrabajosUseCase {
     /*
      *Eventualmente, limitar que un usuario no pueda asignarse mas de X trabajos al mismo tiempo
      * */
+    @Transactional
     public Trabajo asignarTrabajo(UUID trabajoId, String trabajadorCorreo) {
 
         Trabajo trabajo = trabajoRepository
