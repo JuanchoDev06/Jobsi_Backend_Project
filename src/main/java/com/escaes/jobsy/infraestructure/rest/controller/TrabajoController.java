@@ -1,6 +1,7 @@
 package com.escaes.jobsy.infraestructure.rest.controller;
 
 import com.escaes.jobsy.application.dto.trabajo.CrearTrabajoRequest;
+import com.escaes.jobsy.application.dto.trabajo.FinalizarTrabajoRequest;
 import com.escaes.jobsy.application.dto.trabajo.TrabajoResponse;
 import com.escaes.jobsy.application.usecase.trabajo.GestionTrabajosUseCase;
 import com.escaes.jobsy.application.usecase.trabajo.ListarTrabajosUseCase;
@@ -85,14 +86,14 @@ public class TrabajoController {
         return ResponseEntity.ok(responses);
     }
 
-    @PatchMapping("/jobs/take-job/{jobId}")
-    public ResponseEntity<TrabajoResponse> aplicarTrabajo(@PathVariable UUID jobId,Authentication auth){
+    @PatchMapping("/jobs/apply-job/{jobId}")
+    public ResponseEntity<TrabajoResponse> aplicarTrabajo(@PathVariable UUID jobId,UUID solicitudId,Authentication auth){
         String trabajadorCorreo= auth.getName();
 
         //Ejecutamos el caso de uso
-        Trabajo takedJob=gestionTrabajosUseCase.asignarTrabajo(jobId, trabajadorCorreo);
+        Trabajo appliedJob=gestionTrabajosUseCase.asignarTrabajo(jobId, solicitudId);
         LOG.info("Trabajo aplicado correo: " + trabajadorCorreo);
-        return ResponseEntity.ok(TrabajoMapper.entityToResponse(takedJob));
+        return ResponseEntity.ok(TrabajoMapper.entityToResponse(appliedJob));
     }
 
     @PatchMapping("/jobs/unassigned-job/{jobId}")
@@ -111,6 +112,18 @@ public class TrabajoController {
         gestionTrabajosUseCase.eliminarTrabajoPorIdYUsuarioCorreoSolicitante(jobId, solicitanteCorreo);
         LOG.info("Trabajo eliminado id: " + jobId + " solicitante correo: " + solicitanteCorreo);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/jobs/finalize/{jobId}")
+    public ResponseEntity<TrabajoResponse> finalizarTrabajo(
+            @PathVariable UUID jobId,
+            @RequestBody FinalizarTrabajoRequest request,
+            Authentication auth) {
+        String solicitanteCorreo = auth.getName();
+
+        Trabajo trabajoFinalizado = gestionTrabajosUseCase.finalizarTrabajo(jobId, request, solicitanteCorreo);
+        LOG.info("Trabajo finalizado id: " + jobId + ", solicitante: " + solicitanteCorreo);
+        return ResponseEntity.ok(TrabajoMapper.entityToResponse(trabajoFinalizado));
     }
 
     @PatchMapping("/jobs/abandon/{jobId}")

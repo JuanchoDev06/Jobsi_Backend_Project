@@ -20,6 +20,7 @@ import com.escaes.jobsy.application.usecase.ubicacion.GestionUbicacionUseCase;
 import com.escaes.jobsy.application.usecase.ubicacion.ListarUbicacionUseCase;
 import com.escaes.jobsy.application.usecase.usuario.GestionUsuariosUseCase;
 import com.escaes.jobsy.application.usecase.usuario.ListarUsuariosUseCase;
+import com.escaes.jobsy.application.usecase.valoracion.GestionValoracionCategoriasUseCase;
 
 import com.escaes.jobsy.domain.model.Genero;
 import com.escaes.jobsy.domain.model.Rol;
@@ -66,6 +67,8 @@ public class DataInitializer implements CommandLineRunner {
 
     private final ListarUbicacionUseCase listarUbicacionUseCase;
 
+    private final GestionValoracionCategoriasUseCase gestionValoracionCategoriasUseCase;
+
     private static final Logger logger = Logger.getLogger(DataInitializer.class.getName());
 
     @Override
@@ -78,6 +81,7 @@ public class DataInitializer implements CommandLineRunner {
         initializeCategorias();
         initializeTipoPagos();
         initializeUbicaciones();
+        initializeValoracionCategorias();
         logger.info("Inicialización de datos completada.");
     }
 
@@ -134,7 +138,7 @@ public class DataInitializer implements CommandLineRunner {
             Genero genero = gestionGenerosUseCase.obtenerGeneroPorNombre("Alien");
             Rol rol = gestionRolesUseCase.obtenerRolPorNombre("ADMIN");
             UsuarioRequest admin = new UsuarioRequest(1107834660,
-                    "admin","admin","admin", "admin@gmail.com", "123", "300000", new Date(), "", "");
+                    "admin", "admin", "admin", "admin@gmail.com", "123", "300000", new Date(), "", "");
             gestionUsuariosUseCase.crearUsuario(admin, genero, rol);
             logger.info("Admin creado Exitosamente");
         }
@@ -151,8 +155,20 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 
-    public void initializeUbicaciones(){
-        if(listarUbicacionUseCase.count()==0L){
+    private void initializeValoracionCategorias() {
+        if (gestionValoracionCategoriasUseCase.contar() == 0) {
+            logger.info("Inicializando categorias de valoracion por defecto...");
+            gestionValoracionCategoriasUseCase.crear("Calidad");
+            gestionValoracionCategoriasUseCase.crear("Puntualidad");
+            gestionValoracionCategoriasUseCase.crear("Comunicacion");
+            gestionValoracionCategoriasUseCase.crear("Profesionalismo");
+            gestionValoracionCategoriasUseCase.crear("Recomendacion");
+            logger.info("Categorias de valoracion creadas");
+        }
+    }
+
+    public void initializeUbicaciones() {
+        if (listarUbicacionUseCase.count() == 0L) {
             logger.info("Inicializando ubicación por defecto...");
             gestionUbicacionUseCase.crear(new UbicacionRequest("Palmas"));
             gestionUbicacionUseCase.crear(new UbicacionRequest("Almendros"));

@@ -1,0 +1,175 @@
+### Flujo: finalizar un trabajo y valorar al trabajador por categorías
+#
+# Extensión "REST Client" de VS Code. Ejecutar de arriba hacia abajo.
+# Cada petición con nombre (# @name ...) expone su respuesta a las siguientes.
+#
+# Requiere perfil 'dev' o 'prod' arrancado: el DataInitializer siembra las
+# categorías de valoración (Calidad, Puntualidad, Comunicacion, Profesionalismo,
+# Recomendacion), categorías de trabajo, estados, ubicaciones y el admin.
+
+@host = http://localhost:8080
+
+### 1. Registrar al POSTER (quien contrata y finaliza)
+POST {{host}}/v1/public/users/create
+Content-Type: application/json
+
+{
+  "documento": 555555555,
+  "nombre": "PosterFinal",
+  "primerApellido": "Contrata",
+  "segundoApellido": "Trabajo",
+  "email": "posterfinal@gmail.com",
+  "password": "123",
+  "telefono": "3005550011",
+  "fechaNacimiento": "1990-01-01",
+  "genero": "Masculino"
+}
+
+### 2. Registrar al WORKER (a quien se valora)
+POST {{host}}/v1/public/users/create
+Content-Type: application/json
+
+{
+  "documento": 666666666,
+  "nombre": "WorkerFinal",
+  "primerApellido": "Ejecuta",
+  "segundoApellido": "Trabajo",
+  "email": "workerfinal@gmail.com",
+  "password": "123",
+  "telefono": "3006660022",
+  "fechaNacimiento": "1995-05-05",
+  "genero": "Masculino"
+}
+
+### 3. Login del POSTER
+# @name loginPoster
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "posterfinal@gmail.com",
+  "password": "123"
+}
+
+### 4. Login del WORKER
+# @name loginWorker
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "workerfinal@gmail.com",
+  "password": "123"
+}
+
+### 5. Login del ADMIN (para verificar la valoración del worker al final)
+# @name loginAdmin
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "123"
+}
+
+### 6. El POSTER crea un trabajo (estado inicial: PENDIENTE)
+# @name createJob
+POST {{host}}/v1/jobs/create
+Content-Type: application/json
+Authorization: Bearer {{loginPoster.response.body.$.token}}
+
+{
+  "titulo": "Montaje de mueble",
+  "descripcion": "Armar un escritorio y una silla.",
+  "pago": 60000.0,
+  "tipoPago": "Efectivo",
+  "ubicacion": "PALMAS",
+  "categoria": "TAREAS"
+}
+
+### 7. El WORKER se postula al trabajo
+# @name aplicar
+POST {{host}}/v1/requests
+Content-Type: application/json
+Authorization: Bearer {{loginWorker.response.body.$.token}}
+
+{
+  "trabajo": "{{createJob.response.body.$.id}}"
+}
+
+### 8. El POSTER acepta la postulación del worker (PENDIENTE -> ASIGNADO)
+PATCH {{host}}/v1/jobs/apply-job/{{createJob.response.body.$.id}}?solicitudId={{aplicar.response.body.$.id}}
+Authorization: Bearer {{loginPoster.response.body.$.token}}
+
+### 9. El POSTER finaliza el trabajo y valora al worker (ASIGNADO -> FINALIZADO)
+# Respuesta esperada: estado = FINALIZADO. Promedio del trabajo = (5+4+5+4+5)/5 = 4.6
+PATCH {{host}}/v1/jobs/finalize/{{createJob.response.body.$.id}}
+Content-Type: application/json
+Authorization: Bearer {{loginPoster.response.body.$.token}}
+
+{
+  "puntuaciones": [
+    { "categoria": "Calidad",         "puntuacion": 5 },
+    { "categoria": "Puntualidad",     "puntuacion": 4 },
+    { "categoria": "Comunicacion",    "puntuacion": 5 },
+    { "categoria": "Profesionalismo", "puntuacion": 4 },
+    { "categoria": "Recomendacion",   "puntuacion": 5 }
+  ],
+  "comentario": "Excelente trabajo, muy recomendado."
+}
+
+### 10. VERIFICACIÓN: el worker debe tener valoracionConteo=1 y valoracionPromedio=4.6
+GET {{host}}/v1/admin/users/666666666
+Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###############################################
+# CASOS NEGATIVOS
+###############################################
+
+### 11a. Finalizar de nuevo el mismo trabajo -> 400 (ya no está ASIGNADO)
+PATCH {{host}}/v1/jobs/finalize/{{createJob.response.body.$.id}}
+Content-Type: application/json
+Authorization: Bearer {{loginPoster.response.body.$.token}}
+
+{
+  "puntuaciones": [
+    { "categoria": "Calidad",         "puntuacion": 5 },
+    { "categoria": "Puntualidad",     "puntuacion": 5 },
+    { "categoria": "Comunicacion",    "puntuacion": 5 },
+    { "categoria": "Profesionalismo", "puntuacion": 5 },
+    { "categoria": "Recomendacion",   "puntuacion": 5 }
+  ],
+  "comentario": "Reintento"
+}
+
+### 11b. Finalizar con el token del WORKER (no es el dueño) -> 403
+PATCH {{host}}/v1/jobs/finalize/{{createJob.response.body.$.id}}
+Content-Type: application/json
+Authorization: Bearer {{loginWorker.response.body.$.token}}
+
+{
+  "puntuaciones": [
+    { "categoria": "Calidad",         "puntuacion": 5 },
+    { "categoria": "Puntualidad",     "puntuacion": 5 },
+    { "categoria": "Comunicacion",    "puntuacion": 5 },
+    { "categoria": "Profesionalismo", "puntuacion": 5 },
+    { "categoria": "Recomendacion",   "puntuacion": 5 }
+  ],
+  "comentario": "No autorizado"
+}
+
+### 11c. Puntuación fuera de rango (6) -> 400
+PATCH {{host}}/v1/jobs/finalize/{{createJob.response.body.$.id}}
+Content-Type: application/json
+Authorization: Bearer {{loginPoster.response.body.$.token}}
+
+{
+  "puntuaciones": [
+    { "categoria": "Calidad",         "puntuacion": 6 },
+    { "categoria": "Puntualidad",     "puntuacion": 5 },
+    { "categoria": "Comunicacion",    "puntuacion": 5 },
+    { "categoria": "Profesionalismo", "puntuacion": 5 },
+    { "categoria": "Recomendacion",   "puntuacion": 5 }
+  ],
+  "comentario": "Fuera de rango"
+}

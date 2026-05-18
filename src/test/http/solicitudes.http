@@ -1,0 +1,128 @@
+### Flujo completo de postulacion a un trabajo (Solicitudes)
+#
+# Pensado para la extension "REST Client" de VS Code.
+# Ejecutar las peticiones de arriba hacia abajo: cada peticion con nombre
+# (# @name ...) expone su respuesta a las siguientes mediante
+# {{nombre.response.body.$.campo}}, asi NO hay que copiar tokens ni ids a mano.
+#
+# REQUISITO DE DATOS: el trabajo usa "categoria" y "ubicacion" que deben existir.
+# Bajo el perfil 'dev' (H2) NO hay datos sembrados (DataInitializer solo corre en
+# 'prod'). Opciones:
+#   - Arrancar la app en perfil 'prod', o
+#   - Sembrar categoria/ubicacion antes con admin.http
+# Ajusta los valores de "categoria"/"ubicacion"/"tipoPago" a los existentes.
+
+@host = http://localhost:8080
+
+### 1. Registrar al POSTER (quien publica el trabajo)
+POST {{host}}/v1/public/users/create
+Content-Type: application/json
+
+{
+  "documento": 333333333,
+  "nombre": "Poster",
+  "primerApellido": "Dueno",
+  "segundoApellido": "Trabajo",
+  "email": "poster@gmail.com",
+  "password": "123",
+  "telefono": "3001112233",
+  "fechaNacimiento": "1990-01-01",
+  "genero": "Masculino"
+}
+
+### 2. Registrar al WORKER (quien se postula)
+POST {{host}}/v1/public/users/create
+Content-Type: application/json
+
+{
+  "documento": 444444444,
+  "nombre": "Worker",
+  "primerApellido": "Postulante",
+  "segundoApellido": "Prueba",
+  "email": "worker@gmail.com",
+  "password": "123",
+  "telefono": "3004445566",
+  "fechaNacimiento": "1995-05-05",
+  "genero": "Masculino"
+}
+
+### 3. Login del POSTER
+# @name loginPoster
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "poster@gmail.com",
+  "password": "123"
+}
+
+### 4. Login del WORKER
+# @name loginWorker
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "worker@gmail.com",
+  "password": "123"
+}
+
+### 5. El POSTER crea un trabajo
+# @name createJob
+POST {{host}}/v1/jobs/create
+Content-Type: application/json
+Authorization: Bearer {{loginPoster.response.body.$.token}}
+
+{
+  "titulo": "Instalacion de Software",
+  "descripcion": "Se requiere asesoria con la descarga de Docker Desktop.",
+  "pago": 50000.0,
+  "tipoPago": "Efectivo",
+  "ubicacion": "PALMAS",
+  "categoria": "ASESORIAS"
+}
+
+### 6. El WORKER se postula al trabajo (estado inicial: PENDIENTE)
+POST {{host}}/v1/requests
+Content-Type: application/json
+Authorization: Bearer {{loginWorker.response.body.$.token}}
+
+{
+  "trabajo": "{{createJob.response.body.$.id}}"
+}
+
+### 7. El POSTER ve los postulantes de su trabajo
+GET {{host}}/v1/requests/job/{{createJob.response.body.$.id}}
+Accept: application/json
+Authorization: Bearer {{loginPoster.response.body.$.token}}
+
+### 8. El WORKER ve todas sus postulaciones
+GET {{host}}/v1/requests-applied
+Accept: application/json
+Authorization: Bearer {{loginWorker.response.body.$.token}}
+
+###############################################
+# CASOS NEGATIVOS
+###############################################
+
+### 9a. Postularse de nuevo al mismo trabajo -> 409 Conflict
+POST {{host}}/v1/requests
+Content-Type: application/json
+Authorization: Bearer {{loginWorker.response.body.$.token}}
+
+{
+  "trabajo": "{{createJob.response.body.$.id}}"
+}
+
+### 9b. Postularse a un trabajo inexistente -> 404 Not Found
+POST {{host}}/v1/requests
+Content-Type: application/json
+Authorization: Bearer {{loginWorker.response.body.$.token}}
+
+{
+  "trabajo": "00000000-0000-0000-0000-000000000000"
+}
+
+### 9c. El WORKER intenta ver postulantes de un trabajo ajeno -> 403 Forbidden
+GET {{host}}/v1/requests/job/{{createJob.response.body.$.id}}
+Accept: application/json
+Authorization: Bearer {{loginWorker.response.body.$.token}}
