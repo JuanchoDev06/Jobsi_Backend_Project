@@ -5,56 +5,71 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class UserSpecification {
 
-    public static Specification<UsuarioEntity> hasDocument(String document) {
+    public static Specification<UsuarioEntity> hasDocument(Integer document) {
         return (root, query, cb) -> {
-            if (document == null || document.isEmpty()) {
+            if (document == null) {
                 return cb.conjunction();
             } else {
-                return cb.like(root.get("documento"), "%"+document+"%");
+                return cb.equal(root.get("documento"), document);
             }
         };
     }
+
     public static Specification<UsuarioEntity> hasEmail(String email) {
         return (root, query, cb) -> {
             if (email == null || email.isEmpty()) {
                 return cb.conjunction();
             } else {
-                return cb.like(root.get("correo"), "%"+email+"%");
+                return cb.like(root.get("correo"), "%" + email + "%");
             }
         };
     }
+
     public static Specification<UsuarioEntity> hasGender(String genero) {
         return (root, query, cb) -> {
             if (genero == null || genero.isEmpty()) {
                 return cb.conjunction();
             } else {
-                return cb.like(root.join("genero").get("nombreGenero"), "%"+genero+"%");
+                return cb.like(root.join("genero").get("nombreGenero"), "%" + genero + "%");
             }
         };
     }
+
     public static Specification<UsuarioEntity> hasRol(String rol) {
-      return (root, query, cb) -> {
-          if (rol == null || rol.isEmpty()) {
-              return cb.conjunction();
-          }else  {
-              return cb.like(root.join("rol").get("nombre"), "%" + rol + "%");
-          }
-      };
+        return (root, query, cb) -> {
+            if (rol == null || rol.isEmpty()) {
+                return cb.conjunction();
+            } else {
+                return cb.like(root.join("rol").get("nombre"), "%" + rol + "%");
+            }
+        };
     }
-    public static Specification<UsuarioEntity>valoracionConteo(Integer valoracionConteo) {
-        return (root, query, cb) ->{
+
+    public static Specification<UsuarioEntity> hasBloqueado(Boolean bloqueado) {
+        return (root, query, cb) -> {
+            if (bloqueado == null) {
+                return cb.conjunction();
+            } else {
+                return cb.equal(root.get("bloqueado"), bloqueado);
+            }
+        };
+    }
+
+    public static Specification<UsuarioEntity> valoracionConteo(Integer valoracionConteo) {
+        return (root, query, cb) -> {
             if (valoracionConteo == null) {
                 return cb.conjunction();
-            }else{
+            } else {
                 return cb.equal(root.get("valoracionConteo"), valoracionConteo);
             }
         };
     }
-    public static Specification<UsuarioEntity>valoracionPromedio(Integer valoracionPromedio) {
-        return (root, query, cb) ->  {
+
+    public static Specification<UsuarioEntity> valoracionPromedio(Double valoracionPromedio) {
+        return (root, query, cb) -> {
             if (valoracionPromedio == null) {
-               return cb.conjunction();
-            }else {
+                return cb.conjunction();
+            } else {
                 return cb.equal(root.get("valoracionPromedio"), valoracionPromedio);
             }
         };

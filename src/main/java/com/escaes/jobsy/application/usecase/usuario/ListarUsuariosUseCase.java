@@ -53,4 +53,14 @@ public class ListarUsuariosUseCase {
         return usuarioRepository.findAllByFechaNacimientoBetween(fechaInicio, fechaFin);
     }
 
+    /*
+     * Búsqueda dinámica de usuarios: cualquier combinación de filtros opcionales,
+     * con paginación. Cada filtro nulo simplemente no se aplica.
+     */
+    public List<Usuario> buscarUsuarios(Integer documento, String correo, String genero, String rol,
+            Boolean bloqueado, Integer valoracionConteo, Double valoracionPromedio, int size, int page) {
+        return usuarioRepository.findUsersCriteria(
+                documento, correo, genero, rol, bloqueado, valoracionConteo, valoracionPromedio, size, page);
+    }
+
 }

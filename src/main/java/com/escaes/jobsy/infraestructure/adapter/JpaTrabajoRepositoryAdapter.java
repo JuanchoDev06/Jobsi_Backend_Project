@@ -4,6 +4,7 @@ import com.escaes.jobsy.domain.model.Trabajo;
 import com.escaes.jobsy.domain.repository.TrabajoRepository;
 import com.escaes.jobsy.infraestructure.jpa.SpringDataTrabajoRepository;
 import com.escaes.jobsy.infraestructure.mapper.TrabajoMapper;
+import com.escaes.jobsy.infraestructure.persistence.criteria.TrabajoCriteriaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,8 +16,12 @@ public class JpaTrabajoRepositoryAdapter implements TrabajoRepository {
 
     private final SpringDataTrabajoRepository springDataTrabajoRepository;
 
-    public JpaTrabajoRepositoryAdapter(SpringDataTrabajoRepository springDataTrabajoRepository) {
+    private final TrabajoCriteriaRepository trabajoCriteriaRepository;
+
+    public JpaTrabajoRepositoryAdapter(SpringDataTrabajoRepository springDataTrabajoRepository,
+            TrabajoCriteriaRepository trabajoCriteriaRepository) {
         this.springDataTrabajoRepository = springDataTrabajoRepository;
+        this.trabajoCriteriaRepository = trabajoCriteriaRepository;
     }
 
     @Override
@@ -110,6 +115,18 @@ public class JpaTrabajoRepositoryAdapter implements TrabajoRepository {
     @Override
     public List<Trabajo> findByTrabajadorCorreoAndCategoriaAndEstado(String correo, String categoria, String estado) {
         return List.of();
+    }
+
+    @Override
+    public List<Trabajo> buscarTrabajosCriteria(String titulo, String categoria, String estado,
+            String ubicacion, String tipoPago, Double pagoMin, Double pagoMax,
+            String solicitanteCorreo, int size, int page) {
+        return trabajoCriteriaRepository
+                .buscar(titulo, categoria, estado, ubicacion, tipoPago, pagoMin, pagoMax,
+                        solicitanteCorreo, size, page)
+                .stream()
+                .map(TrabajoMapper::toDomain)
+                .toList();
     }
 
 }

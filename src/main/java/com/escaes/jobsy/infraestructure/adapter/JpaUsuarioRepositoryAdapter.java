@@ -3,8 +3,12 @@ package com.escaes.jobsy.infraestructure.adapter;
 import com.escaes.jobsy.domain.model.Usuario;
 import com.escaes.jobsy.domain.repository.UsuarioRepository;
 import com.escaes.jobsy.infraestructure.persistence.entity.UsuarioEntity;
+import com.escaes.jobsy.infraestructure.persistence.specification.UserSpecification;
 import com.escaes.jobsy.infraestructure.jpa.SpringDataUsuarioRepository;
 import com.escaes.jobsy.infraestructure.mapper.UsuarioMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -90,8 +94,23 @@ public class JpaUsuarioRepositoryAdapter implements UsuarioRepository {
     }
 
     @Override
-    public List<Usuario> findUsersCriteria(Integer documento, String correo, String genero, String rol, Boolean bloqueado, Integer valoracionConteo, Double valoracionPromedio, int size, int page) {
-        return List.of();
+    public List<Usuario> findUsersCriteria(Integer documento, String correo, String genero, String rol,
+            Boolean bloqueado, Integer valoracionConteo, Double valoracionPromedio, int size, int page) {
+
+        Specification<UsuarioEntity> spec = UserSpecification.hasDocument(documento)
+                .and(UserSpecification.hasEmail(correo))
+                .and(UserSpecification.hasGender(genero))
+                .and(UserSpecification.hasRol(rol))
+                .and(UserSpecification.hasBloqueado(bloqueado))
+                .and(UserSpecification.valoracionConteo(valoracionConteo))
+                .and(UserSpecification.valoracionPromedio(valoracionPromedio));
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        return springDataUsuarioRepository.findAll(spec, pageable)
+                .getContent().stream()
+                .map(UsuarioMapper::toDomain)
+                .toList();
     }
 
     @Override
