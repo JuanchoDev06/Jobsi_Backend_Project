@@ -21,4 +21,9 @@ public class BusinessExceptions extends RuntimeException {
             super(message);
         }
     }
+    public static class ForbiddenException extends BusinessExceptions {
+        public ForbiddenException(String message) {
+            super(message);
+        }
+    }
 }

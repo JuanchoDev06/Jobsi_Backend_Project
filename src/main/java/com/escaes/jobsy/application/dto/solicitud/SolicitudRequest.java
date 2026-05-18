@@ -1,8 +1,8 @@
 package com.escaes.jobsy.application.dto.solicitud;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-public record SolicitudRequest( @NotBlank UUID trabajo) {
+public record SolicitudRequest(@NotNull UUID trabajo) {
 }

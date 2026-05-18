@@ -53,7 +53,7 @@ public class JpaSolicitudRepositoryAdapter implements SolicitudRepository {
 
     @Override
     public List<Solicitud> findByUsuario(Usuario usuario) {
-        return springDataSolicitudRepository.findByUsuario(usuario)
+        return springDataSolicitudRepository.findByUsuarioDocumento(usuario.documento())
                 .stream()
                 .map(SolicitudMapper::toDomain)
                 .collect(Collectors.toList());
@@ -61,7 +61,7 @@ public class JpaSolicitudRepositoryAdapter implements SolicitudRepository {
 
     @Override
     public List<Solicitud> findByTrabajo(Trabajo trabajo) {
-        return springDataSolicitudRepository.findByTrabajo(trabajo)
+        return springDataSolicitudRepository.findByTrabajoId(trabajo.id())
                 .stream()
                 .map(SolicitudMapper::toDomain)
                 .collect(Collectors.toList());

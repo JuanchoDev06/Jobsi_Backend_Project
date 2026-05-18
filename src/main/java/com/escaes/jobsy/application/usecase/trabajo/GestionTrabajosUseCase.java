@@ -1,6 +1,8 @@
 package com.escaes.jobsy.application.usecase.trabajo;
 
 import com.escaes.jobsy.application.dto.trabajo.CrearTrabajoRequest;
+import com.escaes.jobsy.application.dto.trabajo.FinalizarTrabajoRequest;
+import com.escaes.jobsy.application.usecase.valoracion.GestionValoracionCategoriasUseCase;
 import com.escaes.jobsy.domain.model.*;
 import com.escaes.jobsy.domain.repository.*;
 import com.escaes.jobsy.infraestructure.persistence.enums.EstadoSolicitud;
@@ -9,7 +11,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -31,6 +36,10 @@ public class GestionTrabajosUseCase {
     private final UbicacionRepository ubicacionRepository;
 
     private final SolicitudRepository solicitudRepository;
+
+    private final ValoracionRepository valoracionRepository;
+
+    private final GestionValoracionCategoriasUseCase gestionValoracionCategoriasUseCase;
 
     /*
      * Eventualmente, delimitar cuantos trabajos activos puede crear un usuario
@@ -208,5 +217,109 @@ public class GestionTrabajosUseCase {
         trabajoRepository.save(updated);
     }
 
+    /**
+     * Finaliza un trabajo ASIGNADO: solo el solicitante (quien contrató) puede hacerlo.
+     * En la misma operación registra una valoración por cada categoría sembrada y
+     * recalcula la valoración del trabajador. Un trabajo finalizado cuenta como
+     * +1 en valoracionConteo (no +1 por categoría); aporta una sola nota al promedio.
+     */
+    @Transactional
+    public Trabajo finalizarTrabajo(UUID jobId, FinalizarTrabajoRequest request, String solicitanteCorreo) {
+
+        Trabajo trabajo = trabajoRepository.findById(jobId)
+                .orElseThrow(() -> new BusinessExceptions.NotFoundException("Trabajo no encontrado"));
+
+        if (!"ASIGNADO".equals(trabajo.estado().nombre())) {
+            throw new BusinessExceptions.BadRequestException(
+                    "El trabajo no está asignado, no se puede finalizar");
+        }
+        if (!trabajo.solicitante().correo().equals(solicitanteCorreo)) {
+            throw new BusinessExceptions.ForbiddenException(
+                    "Solo el creador del trabajo puede finalizarlo");
+        }
+        if (trabajo.trabajador() == null) {
+            throw new BusinessExceptions.BadRequestException("El trabajo no tiene trabajador asignado");
+        }
+
+        List<ValoracionCategoria> categorias = gestionValoracionCategoriasUseCase.listar();
+        if (request == null || request.puntuaciones() == null
+                || request.puntuaciones().size() != categorias.size()) {
+            throw new BusinessExceptions.BadRequestException(
+                    "Debes enviar una puntuación para cada una de las " + categorias.size()
+                            + " categorías de valoración");
+        }
+
+        // Pasar el trabajo a FINALIZADO
+        Estado estadoFinalizado = estadoRepository.findByNombre("FINALIZADO")
+                .orElseThrow(() -> new BusinessExceptions.NotFoundException("Estado 'FINALIZADO' no existe"));
+
+        Trabajo trabajoFinalizado = new Trabajo(
+                trabajo.id(),
+                trabajo.titulo(),
+                trabajo.descripcion(),
+                trabajo.fechaPublicacion(),
+                trabajo.pago(),
+                trabajo.ubicacion(),
+                trabajo.solicitante(),
+                trabajo.trabajador(),
+                trabajo.categoria(),
+                estadoFinalizado,
+                trabajo.tipoPago());
+        trabajoRepository.save(trabajoFinalizado);
+
+        // Registrar una valoración por categoría y acumular la nota del trabajo
+        Set<String> categoriasVistas = new HashSet<>();
+        double suma = 0;
+        for (FinalizarTrabajoRequest.PuntuacionCategoria p : request.puntuaciones()) {
+            if (p.categoria() == null || p.puntuacion() == null) {
+                throw new BusinessExceptions.BadRequestException(
+                        "Cada valoración requiere categoría y puntuación");
+            }
+            if (p.puntuacion() < 1 || p.puntuacion() > 5) {
+                throw new BusinessExceptions.BadRequestException(
+                        "La puntuación debe estar entre 1 y 5");
+            }
+            ValoracionCategoria categoria = gestionValoracionCategoriasUseCase.obtenerPorNombre(p.categoria());
+            if (!categoriasVistas.add(categoria.nombre().toLowerCase())) {
+                throw new BusinessExceptions.BadRequestException(
+                        "Categoría de valoración repetida: " + p.categoria());
+            }
+            valoracionRepository.save(new Valoracion(
+                    null, trabajoFinalizado, categoria, p.puntuacion(), request.comentario()));
+            suma += p.puntuacion();
+        }
+
+        // Nota del trabajo = promedio de sus categorías -> aporta UN valor al promedio del trabajador
+        double notaTrabajo = suma / request.puntuaciones().size();
+
+        Usuario trabajador = usuarioRepository.findByCorreo(trabajo.trabajador().correo())
+                .orElseThrow(() -> new BusinessExceptions.NotFoundException("Trabajador no encontrado"));
+
+        int conteoActual = trabajador.valoracionConteo() != null ? trabajador.valoracionConteo() : 0;
+        double promedioActual = trabajador.valoracionPromedio() != null ? trabajador.valoracionPromedio() : 0.0;
+        int nuevoConteo = conteoActual + 1;
+        double nuevoPromedio = (promedioActual * conteoActual + notaTrabajo) / nuevoConteo;
+        nuevoPromedio = Math.round(nuevoPromedio * 10.0) / 10.0;
+
+        Usuario trabajadorActualizado = new Usuario(
+                trabajador.documento(),
+                trabajador.nombre(),
+                trabajador.primerApellido(),
+                trabajador.segundoApellido(),
+                trabajador.correo(),
+                trabajador.clave(),
+                trabajador.telefono(),
+                trabajador.bloqueado(),
+                trabajador.fechaNacimiento(),
+                nuevoConteo,
+                nuevoPromedio,
+                trabajador.genero(),
+                trabajador.rol(),
+                trabajador.trabajos(),
+                trabajador.trabajosRealizados());
+        usuarioRepository.save(trabajadorActualizado);
+
+        return trabajoFinalizado;
+    }
 
 }

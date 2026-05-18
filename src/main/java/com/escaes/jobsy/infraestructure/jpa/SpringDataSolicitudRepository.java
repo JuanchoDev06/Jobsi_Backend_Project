@@ -1,7 +1,5 @@
 package com.escaes.jobsy.infraestructure.jpa;
 
-import com.escaes.jobsy.domain.model.Trabajo;
-import com.escaes.jobsy.domain.model.Usuario;
 import com.escaes.jobsy.infraestructure.persistence.entity.SolicitudEntity;
 import com.escaes.jobsy.infraestructure.persistence.enums.EstadoSolicitud;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -42,9 +40,9 @@ public interface SpringDataSolicitudRepository extends JpaRepository<SolicitudEn
 
     boolean existsByUsuarioCorreoAndTrabajoId(String correo, UUID trabajoId);
 
-    List<SolicitudEntity> findByUsuario(Usuario usuario);
+    List<SolicitudEntity> findByUsuarioDocumento(Integer documento);
 
-    List<SolicitudEntity> findByTrabajo(Trabajo trabajo);
+    List<SolicitudEntity> findByTrabajoId(UUID trabajoId);
 
 
 }

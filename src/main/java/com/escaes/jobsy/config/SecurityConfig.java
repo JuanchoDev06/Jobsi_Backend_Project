@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
 public class SecurityConfig {
 
@@ -29,15 +28,16 @@ public class SecurityConfig {
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
-    //    @Bean
-//    SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception {
-//        http
-//        .csrf(AbstractHttpConfigurer::disable).headers(httpSecurityHeadersConfigurer -> {
-//                    httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
-//                })
-//                .authorizeHttpRequests((auth)->auth.anyRequest().permitAll());
-//        return http.build();
-//    }
+    // @Bean
+    // SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception {
+    // http
+    // .csrf(AbstractHttpConfigurer::disable).headers(httpSecurityHeadersConfigurer
+    // -> {
+    // httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable);
+    // })
+    // .authorizeHttpRequests((auth)->auth.anyRequest().permitAll());
+    // return http.build();
+    // }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -47,7 +47,7 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-                        //.requestMatchers("/v1/users/create").permitAll()
+                        // .requestMatchers("/v1/users/create").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/v1/public/**").permitAll()
@@ -56,9 +56,9 @@ public class SecurityConfig {
                         .requestMatchers("/v1/gender/**").hasRole("ADMIN")
                         .requestMatchers("/v1/ubication/**").hasRole("ADMIN")
                         .requestMatchers("/v1/lookups/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/v1/requests/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/internal/**").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).exceptionHandling(ex -> ex
                         // cuando no hay autenticación (JWT inválido, expirado, ausente)
                         .authenticationEntryPoint((request, response, authException) -> {
@@ -75,8 +75,7 @@ public class SecurityConfig {
                             response.getWriter().write("""
                                         {"message":"No tienes permisos para acceder a este recurso","status":403}
                                     """);
-                        })
-                )
+                        }))
                 .build();
     }
 
