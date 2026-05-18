@@ -34,4 +34,12 @@ public interface TrabajoRepository {
     List<Trabajo> findByTrabajadorCorreoAndCategoria(String correo, String categoria);
     List<Trabajo> findByTrabajadorCorreoAndCategoriaAndEstado(String correo, String categoria, String estado);
 
+    /*
+     * Búsqueda dinámica de trabajos: cualquier combinación de filtros opcionales,
+     * con paginación. Implementada con la JPA Criteria API.
+     */
+    List<Trabajo> buscarTrabajosCriteria(String titulo, String categoria, String estado,
+            String ubicacion, String tipoPago, Double pagoMin, Double pagoMax,
+            String solicitanteCorreo, int size, int page);
+
 }

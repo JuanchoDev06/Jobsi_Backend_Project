@@ -1,0 +1,68 @@
+### Búsquedas dinámicas: usuarios (Specification) y trabajos (Criteria API)
+#
+# Extensión "REST Client" de VS Code. Ejecutar de arriba hacia abajo.
+
+@host = http://localhost:8080
+
+### 1. Login del ADMIN (la búsqueda de usuarios es /v1/admin/** -> rol ADMIN)
+# @name loginAdmin
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "123"
+}
+
+###############################################
+# A. BÚSQUEDA DINÁMICA DE USUARIOS (Specification)
+###############################################
+
+### 2. Sin filtros -> primera página (size=10, page=0) de todos los usuarios
+GET {{host}}/v1/admin/users/search
+Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+### 3. Filtrar por rol = USER, página de 5
+GET {{host}}/v1/admin/users/search?rol=USER&size=5&page=0
+Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+### 4. Filtrar por documento exacto
+GET {{host}}/v1/admin/users/search?documento=1107834660
+Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+### 5. Combinar filtros: correo (LIKE parcial) + bloqueado
+GET {{host}}/v1/admin/users/search?correo=admin&bloqueado=false
+Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+### 6. Filtrar por valoración exacta del trabajador
+GET {{host}}/v1/admin/users/search?valoracionConteo=1
+Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.$.token}}
+
+###############################################
+# B. BÚSQUEDA DINÁMICA DE TRABAJOS (Criteria API) - endpoint público
+###############################################
+
+### 7. Sin filtros -> primera página de todos los trabajos
+GET {{host}}/v1/public/jobs/search
+Accept: application/json
+
+### 8. Filtrar por estado y categoría
+GET {{host}}/v1/public/jobs/search?estado=PENDIENTE&categoria=TAREAS
+Accept: application/json
+
+### 9. Filtrar por rango de pago
+GET {{host}}/v1/public/jobs/search?pagoMin=40000&pagoMax=80000
+Accept: application/json
+
+### 10. Filtrar por título parcial (LIKE, ignora mayúsculas)
+GET {{host}}/v1/public/jobs/search?titulo=software
+Accept: application/json
+
+### 11. Combinar filtros + paginación
+GET {{host}}/v1/public/jobs/search?ubicacion=PALMAS&estado=PENDIENTE&size=5&page=0
+Accept: application/json

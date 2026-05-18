@@ -57,6 +57,28 @@ public class TrabajoController {
 
     }
 
+    @GetMapping("/public/jobs/search")
+    public ResponseEntity<List<TrabajoResponse>> buscarTrabajos(
+            @RequestParam(required = false) String titulo,
+            @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) String ubicacion,
+            @RequestParam(required = false) String tipoPago,
+            @RequestParam(required = false) Double pagoMin,
+            @RequestParam(required = false) Double pagoMax,
+            @RequestParam(required = false) String solicitanteCorreo,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int page) {
+
+        List<TrabajoResponse> responses = listarTrabajosUseCase.buscarTrabajos(
+                titulo, categoria, estado, ubicacion, tipoPago, pagoMin, pagoMax,
+                solicitanteCorreo, size, page)
+                .stream()
+                .map(TrabajoMapper::entityToResponse)
+                .toList();
+        return ResponseEntity.ok(responses);
+    }
+
     @GetMapping("/jobs/posted-by-me")
     public ResponseEntity<List<TrabajoResponse>> obtenerTrabajosMyJobs(Authentication auth) {
         String solicitanteCorreo = auth.getName();

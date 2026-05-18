@@ -35,4 +35,16 @@ public class ListarTrabajosUseCase {
     public List<Trabajo>listarPorUsuarioTrabajador(String correoTrabajador){
         return trabajoRepository.findByTrabajadorCorreo(correoTrabajador);
     }
+
+    /*
+     * Búsqueda dinámica de trabajos: cualquier combinación de filtros opcionales,
+     * con paginación. Delega en el repositorio (implementado con la Criteria API).
+     */
+    public List<Trabajo> buscarTrabajos(String titulo, String categoria, String estado,
+            String ubicacion, String tipoPago, Double pagoMin, Double pagoMax,
+            String solicitanteCorreo, int size, int page) {
+        return trabajoRepository.buscarTrabajosCriteria(
+                titulo, categoria, estado, ubicacion, tipoPago, pagoMin, pagoMax,
+                solicitanteCorreo, size, page);
+    }
 }

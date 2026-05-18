@@ -4,12 +4,14 @@ import com.escaes.jobsy.infraestructure.persistence.entity.GeneroEntity;
 import com.escaes.jobsy.infraestructure.persistence.entity.RolEntity;
 import com.escaes.jobsy.infraestructure.persistence.entity.UsuarioEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface SpringDataUsuarioRepository extends JpaRepository<UsuarioEntity, Integer> {
+public interface SpringDataUsuarioRepository
+        extends JpaRepository<UsuarioEntity, Integer>, JpaSpecificationExecutor<UsuarioEntity> {
 
     Optional<UsuarioEntity> findByDocumentoOrCorreoOrTelefono(Integer documento, String correo, String telefono);
 
